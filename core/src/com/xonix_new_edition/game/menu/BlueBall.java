@@ -23,7 +23,7 @@ public class BlueBall {
 
     BlueBall(int speed){
         this.speed = speed;
-        texture = new Texture("blue_ball.png");
+        texture = new Texture("blue_ball1.png");
         position = new Vector2(10, 10);
         direction = BlueBallDirection.DEFAULT;
     }
@@ -56,13 +56,13 @@ public class BlueBall {
             position.x -= speed;
         }
         else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-            if(position.x >= 930)
+            if(position.x >= 935)
                 return;
             direction = BlueBallDirection.RIGHT;
             position.x += speed;
         }
         else if(Gdx.input.isKeyPressed(Input.Keys.UP)){
-            if(position.y >= 640)
+            if(position.y >= 645)
                 return;
             direction = BlueBallDirection.UP;
             position.y += speed;
