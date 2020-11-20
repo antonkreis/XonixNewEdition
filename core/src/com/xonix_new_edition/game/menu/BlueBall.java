@@ -9,9 +9,9 @@ import com.badlogic.gdx.math.Vector2;
 public class BlueBall {
     Texture texture;
     Vector2 position;
-    int step = 5;
+    int speed = 5;
 
-    enum BlueBallDirection{
+    public enum BlueBallDirection{
         DEFAULT,
         LEFT,
         RIGHT,
@@ -19,17 +19,25 @@ public class BlueBall {
         DOWN
     }
 
-    BlueBallDirection blueBallDirection;
+    BlueBallDirection direction;
 
-    BlueBall(int step){
-        this.step = step;
+    BlueBall(int speed){
+        this.speed = speed;
         texture = new Texture("blue_ball.png");
         position = new Vector2(10, 10);
-        blueBallDirection = BlueBallDirection.DEFAULT;
+        direction = BlueBallDirection.DEFAULT;
     }
 
-    public void setStep(int step){
-        this.step = step;
+    public void setSpeed(int speed){
+        this.speed = speed;
+    }
+
+    public BlueBallDirection getDirection(){
+        return direction;
+    }
+
+    public void setDefaultDirection(){
+        direction = BlueBallDirection.DEFAULT;
     }
 
     public Vector2 getPosition(){
@@ -44,26 +52,26 @@ public class BlueBall {
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
             if(position.x <= 10)
                 return;
-            blueBallDirection = BlueBallDirection.LEFT;
-            position.x -= step;
+            direction = BlueBallDirection.LEFT;
+            position.x -= speed;
         }
         else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
             if(position.x >= 930)
                 return;
-            blueBallDirection = BlueBallDirection.RIGHT;
-            position.x += step;
+            direction = BlueBallDirection.RIGHT;
+            position.x += speed;
         }
         else if(Gdx.input.isKeyPressed(Input.Keys.UP)){
             if(position.y >= 640)
                 return;
-            blueBallDirection = BlueBallDirection.UP;
-            position.y += step;
+            direction = BlueBallDirection.UP;
+            position.y += speed;
         }
         else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
             if(position.y <= 10)
                 return;
-            blueBallDirection = BlueBallDirection.DOWN;
-            position.y -= step;
+            direction = BlueBallDirection.DOWN;
+            position.y -= speed;
         }
     }
 }
