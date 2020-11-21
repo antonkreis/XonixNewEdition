@@ -73,5 +73,27 @@ public class BlueBall {
             direction = BlueBallDirection.DOWN;
             position.y -= speed;
         }
+        else if(direction == BlueBallDirection.LEFT){
+            if(position.x <= 10)
+                return;
+            position.x -= speed;
+        }
+        else if(direction == BlueBallDirection.RIGHT){
+            if(position.x >= 935)
+                return;
+            position.x += speed;
+        }
+        else if(direction == BlueBallDirection.UP){
+            if(position.y >= 645)
+                return;
+            position.y += speed;
+        }
+        else if(direction == BlueBallDirection.DOWN){
+            if(position.y <= 10)
+                return;
+            position.y -= speed;
+        }
+
+
     }
 }

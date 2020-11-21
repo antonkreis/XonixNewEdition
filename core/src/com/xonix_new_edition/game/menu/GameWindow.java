@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class GameWindow implements Screen {
     private final int FIELD_CELL_SIZE = 5;
-    private final int SEA_OFFSET = 40;
+    private final int SEA_OFFSET = 15;
 
     private int[][] fieldGrid;
     Stage stage;
@@ -70,10 +70,24 @@ public class GameWindow implements Screen {
             lineEndPositionArrayList.add(new Vector2());
         }
 
-        fieldGrid = new int[930 / FIELD_CELL_SIZE][640 / FIELD_CELL_SIZE];
-        for(int i = 0; i < 930 / FIELD_CELL_SIZE; i++){
-            for(int j = 0; j < 10 / FIELD_CELL_SIZE; j++) {
+        fieldGrid = new int[990 / FIELD_CELL_SIZE][690 / FIELD_CELL_SIZE];
+        for(int i = 0; i < 990 / FIELD_CELL_SIZE; i++){
+            for(int j = 0; j < 35 / FIELD_CELL_SIZE; j++) {
                 fieldGrid[i][j] = 3;
+            }
+
+            for(int j = 0; j < 30; j++) {
+                fieldGrid[i][(690 - j)/ FIELD_CELL_SIZE  - 1] = 3;
+            }
+        }
+
+        for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
+            for(int i = 0; i < 35 / FIELD_CELL_SIZE; i++) {
+                fieldGrid[i][j] = 3;
+            }
+
+            for(int i = 0; i < 40; i++) {
+                fieldGrid[(990 - i)/ FIELD_CELL_SIZE  - 1][j] = 3;
             }
         }
 
@@ -94,8 +108,8 @@ public class GameWindow implements Screen {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        for(int i = 0; i < 930 / FIELD_CELL_SIZE; i++){
-            for(int j = 0; j < 640 / FIELD_CELL_SIZE; j++){
+        for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
+            for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
                 if(fieldGrid[i][j] == 1){
                     fieldPixmap.setColor(Color.BROWN);
                     fieldPixmap.fillRectangle(SEA_OFFSET + i * FIELD_CELL_SIZE, SEA_OFFSET + j * FIELD_CELL_SIZE,
@@ -140,22 +154,43 @@ public class GameWindow implements Screen {
 //            return;
         Vector2 blueBallPosition = blueBall.getPosition();
 
-        if((((int)blueBallPosition.x - 10) / FIELD_CELL_SIZE) != 0
-                && ((629 - (int)blueBallPosition.y + 20) / FIELD_CELL_SIZE) != 0
-                && (((int)blueBallPosition.x - 10) / FIELD_CELL_SIZE) != ((930)/ FIELD_CELL_SIZE - 1)
-                && ((629 - (int)blueBallPosition.y + 20) / FIELD_CELL_SIZE) != ((640)/ FIELD_CELL_SIZE - 1)){
-            fieldGrid[((int)blueBallPosition.x - 10) / 5][(629 - (int)blueBallPosition.y + 20) / 5] = 1;
+//        if((((int)blueBallPosition.x - 10) / FIELD_CELL_SIZE) != 0
+//                && ((689 - (int)blueBallPosition.y + 20) / FIELD_CELL_SIZE) != 0
+//                && (((int)blueBallPosition.x - 10) / FIELD_CELL_SIZE) != ((990)/ FIELD_CELL_SIZE - 1)
+//                && ((689 - (int)blueBallPosition.y + 20) / FIELD_CELL_SIZE) != ((690)/ FIELD_CELL_SIZE - 1)){
+//            fieldGrid[((int)blueBallPosition.x - 10) / 5][(689 - (int)blueBallPosition.y + 20) / 5] = 1;
+//            if(!captureBegin){
+//                System.out.println("bla");
+//                captureBegin = true;
+//            }
+//
+//        }
+
+
+        if(fieldGrid[((int)blueBallPosition.x + 15) / 5][(659 - (int)blueBallPosition.y + 15) / 5] == 1){
+            captureBegin = false;
+            System.out.println("blu");
+            for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
+                for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
+                    if(fieldGrid[i][j] == 1)
+                        fieldGrid[i][j] = 0;
+                }
+            }
+        }
+
+        if(fieldGrid[((int)blueBallPosition.x + 15) / FIELD_CELL_SIZE][((int)blueBallPosition.y + 15) / FIELD_CELL_SIZE] != 3){
+            fieldGrid[((int)blueBallPosition.x + 15) / 5][(659 - (int)blueBallPosition.y + 15) / 5] = 1;
             if(!captureBegin){
                 System.out.println("bla");
                 captureBegin = true;
             }
-
         }
+
         else{
             captureBegin = false;
-            System.out.println("ble");
-            for(int i = 0; i < 930 / FIELD_CELL_SIZE; i++){
-                for(int j = 0; j < 640 / FIELD_CELL_SIZE; j++){
+            //System.out.println("ble");
+            for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
+                for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
                     if(fieldGrid[i][j] == 1)
                         fieldGrid[i][j] = 0;
                 }
