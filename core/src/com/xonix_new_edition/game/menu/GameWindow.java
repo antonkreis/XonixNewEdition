@@ -113,12 +113,17 @@ public class GameWindow implements Screen {
         for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
             for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
                 if(fieldGrid[i][j] == 1){
-                    fieldPixmap.setColor(Color.BROWN);
+                    fieldPixmap.setColor(Color.BLUE);
                     fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
                             FIELD_CELL_SIZE, FIELD_CELL_SIZE);
                 }
                 else if(fieldGrid[i][j] == 3){
                     fieldPixmap.setColor(Color.LIGHT_GRAY);
+                    fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
+                            FIELD_CELL_SIZE, FIELD_CELL_SIZE);
+                }
+                else if(fieldGrid[i][j] == 2){
+                    fieldPixmap.setColor(Color.BLUE);
                     fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
                             FIELD_CELL_SIZE, FIELD_CELL_SIZE);
                 }
@@ -148,10 +153,6 @@ public class GameWindow implements Screen {
     }
 
     public void update(){
-
-        if(captureBegin)
-            System.out.println("blu");
-
         Vector2 blueBallPosition = blueBall.getPosition();
 
         if(fieldGrid[((int)blueBallPosition.x + 15) / 5][(659 - (int)blueBallPosition.y + 15) / 5] == 1){
@@ -165,33 +166,27 @@ public class GameWindow implements Screen {
             }
         }
 
-        if(fieldGrid[((int)blueBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - 15) / FIELD_CELL_SIZE] != 3){
+        if(fieldGrid[((int)blueBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - 15) / FIELD_CELL_SIZE] != 3
+                && fieldGrid[((int)blueBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - 15) / FIELD_CELL_SIZE] != 2){
             fieldGrid[((int)blueBallPosition.x + 15) / 5][(689 - (int)blueBallPosition.y - 15) / 5] = 1;
-
-                captureBegin = true;
-
+            captureBegin = true;
         }
 
         else{
 
             if(captureBegin){
                 blueBall.setDefaultDirection();
-                System.out.println("bla");
             }
 
-
             captureBegin = false;
-
 
             for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
                 for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
                     if(fieldGrid[i][j] == 1)
-                        fieldGrid[i][j] = 3;
+                        fieldGrid[i][j] = 2;
                 }
             }
         }
-
-
     }
 
     @Override
