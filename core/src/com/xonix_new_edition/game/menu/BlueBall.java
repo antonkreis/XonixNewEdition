@@ -93,7 +93,5 @@ public class BlueBall {
                 return;
             position.y -= speed;
         }
-
-
     }
 }

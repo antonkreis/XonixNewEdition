@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class GameWindow implements Screen {
     private final int FIELD_CELL_SIZE = 5;
-    private final int SEA_OFFSET = 15;
+    private final int FIELD_OFFSET = 15;
 
     private int[][] fieldGrid;
     Stage stage;
@@ -25,6 +25,7 @@ public class GameWindow implements Screen {
     Texture background;
     OrthographicCamera camera;
     BlueBall blueBall;
+    RedBall redBall;
     ShapeRenderer shapeRenderer;
     ArrayList<Vector2> lineStartPositionArrayList;
     ArrayList<Vector2> lineEndPositionArrayList;
@@ -46,6 +47,7 @@ public class GameWindow implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 1280, 720);
         blueBall = new BlueBall(5);
+        redBall = new RedBall(5);
         leaveButton = new Button(xonixNewEdition, "leave_button.png", "leave_button.png", 1070, 20);
         leaveButton.textButton.addListener(new ChangeListener() {
             @Override
@@ -70,8 +72,8 @@ public class GameWindow implements Screen {
             lineEndPositionArrayList.add(new Vector2());
         }
 
-        fieldGrid = new int[990 / FIELD_CELL_SIZE][690 / FIELD_CELL_SIZE];
-        for(int i = 0; i < 990 / FIELD_CELL_SIZE; i++){
+        fieldGrid = new int[980 / FIELD_CELL_SIZE][690 / FIELD_CELL_SIZE];
+        for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
             for(int j = 0; j < 35 / FIELD_CELL_SIZE; j++) {
                 fieldGrid[i][j] = 3;
             }
@@ -86,8 +88,8 @@ public class GameWindow implements Screen {
                 fieldGrid[i][j] = 3;
             }
 
-            for(int i = 0; i < 40; i++) {
-                fieldGrid[(990 - i)/ FIELD_CELL_SIZE  - 1][j] = 3;
+            for(int i = 0; i < 30; i++) {
+                fieldGrid[(980 - i)/ FIELD_CELL_SIZE  - 1][j] = 3;
             }
         }
 
@@ -112,17 +114,17 @@ public class GameWindow implements Screen {
             for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
                 if(fieldGrid[i][j] == 1){
                     fieldPixmap.setColor(Color.BROWN);
-                    fieldPixmap.fillRectangle(SEA_OFFSET + i * FIELD_CELL_SIZE, SEA_OFFSET + j * FIELD_CELL_SIZE,
+                    fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
                             FIELD_CELL_SIZE, FIELD_CELL_SIZE);
                 }
                 else if(fieldGrid[i][j] == 3){
                     fieldPixmap.setColor(Color.LIGHT_GRAY);
-                    fieldPixmap.fillRectangle(SEA_OFFSET + i * FIELD_CELL_SIZE, SEA_OFFSET + j * FIELD_CELL_SIZE,
+                    fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
                             FIELD_CELL_SIZE, FIELD_CELL_SIZE);
                 }
                 else{
                     fieldPixmap.setColor(Color.WHITE);
-                    fieldPixmap.fillRectangle(SEA_OFFSET + i * FIELD_CELL_SIZE, SEA_OFFSET + j * FIELD_CELL_SIZE,
+                    fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
                             FIELD_CELL_SIZE, FIELD_CELL_SIZE);
                 }
             }
@@ -138,38 +140,23 @@ public class GameWindow implements Screen {
         batch.draw(fieldTexture, 0, 0);
 
         blueBall.render(batch);
+        redBall.render(batch);
         batch.end();
         stage.draw();
         update();
 
-//        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-//        for (int i = 0; i < lineStartPositionArrayList.size(); i++) {
-//            shapeRenderer.line(lineStartPositionArrayList.get(i), lineEndPositionArrayList.get(i));
-//        }
-//        shapeRenderer.end();
     }
 
     public void update(){
-//        if(lineStartPositionArrayList.size() == 0)
-//            return;
+
+        if(captureBegin)
+            System.out.println("blu");
+
         Vector2 blueBallPosition = blueBall.getPosition();
-
-//        if((((int)blueBallPosition.x - 10) / FIELD_CELL_SIZE) != 0
-//                && ((689 - (int)blueBallPosition.y + 20) / FIELD_CELL_SIZE) != 0
-//                && (((int)blueBallPosition.x - 10) / FIELD_CELL_SIZE) != ((990)/ FIELD_CELL_SIZE - 1)
-//                && ((689 - (int)blueBallPosition.y + 20) / FIELD_CELL_SIZE) != ((690)/ FIELD_CELL_SIZE - 1)){
-//            fieldGrid[((int)blueBallPosition.x - 10) / 5][(689 - (int)blueBallPosition.y + 20) / 5] = 1;
-//            if(!captureBegin){
-//                System.out.println("bla");
-//                captureBegin = true;
-//            }
-//
-//        }
-
 
         if(fieldGrid[((int)blueBallPosition.x + 15) / 5][(659 - (int)blueBallPosition.y + 15) / 5] == 1){
             captureBegin = false;
-            System.out.println("blu");
+            //System.out.println("blu");
             for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
                 for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
                     if(fieldGrid[i][j] == 1)
@@ -178,69 +165,33 @@ public class GameWindow implements Screen {
             }
         }
 
-        if(fieldGrid[((int)blueBallPosition.x + 15) / FIELD_CELL_SIZE][((int)blueBallPosition.y + 15) / FIELD_CELL_SIZE] != 3){
-            fieldGrid[((int)blueBallPosition.x + 15) / 5][(659 - (int)blueBallPosition.y + 15) / 5] = 1;
-            if(!captureBegin){
-                System.out.println("bla");
+        if(fieldGrid[((int)blueBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - 15) / FIELD_CELL_SIZE] != 3){
+            fieldGrid[((int)blueBallPosition.x + 15) / 5][(689 - (int)blueBallPosition.y - 15) / 5] = 1;
+
                 captureBegin = true;
-            }
+
         }
 
         else{
+
+            if(captureBegin){
+                blueBall.setDefaultDirection();
+                System.out.println("bla");
+            }
+
+
             captureBegin = false;
-            //System.out.println("ble");
+
+
             for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
                 for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
                     if(fieldGrid[i][j] == 1)
-                        fieldGrid[i][j] = 0;
+                        fieldGrid[i][j] = 3;
                 }
             }
         }
 
 
-
-//        if(lineStartPositionArrayList.size() > 1){
-//            if(blueBallPosition.x <= 10 || blueBallPosition.x >= 930
-//                    || blueBallPosition.y <= 10 || blueBallPosition.y >= 640){
-//                for(int i = 1; i < lineStartPositionArrayList.size(); i++){
-//                    lineStartPositionArrayList.remove(lineStartPositionArrayList.size() - 1);
-//                    lineEndPositionArrayList.remove(lineEndPositionArrayList.size() - 1);
-//                }
-//                lineStartPositionArrayList.get(0).x = blueBallPosition.x + 35;
-//                lineStartPositionArrayList.get(0).y = blueBallPosition.y + 35;
-//                lineEndPositionArrayList.get(0).x = blueBallPosition.x + 35;
-//                lineEndPositionArrayList.get(0).y = blueBallPosition.y + 35;
-//
-//                blueBall.setDefaultDirection();
-//
-//                return;
-//            }
-//        }
-//
-//
-//        if(currentDirection != blueBall.getDirection()){
-//            System.out.println("a");
-//            lineEndPositionArrayList.add(new Vector2());
-//
-//            lineStartPositionArrayList.add(
-//                    new Vector2(lineEndPositionArrayList.get(lineEndPositionArrayList.size() - 1).x,
-//                            lineEndPositionArrayList.get(lineEndPositionArrayList.size() - 1).y));
-//
-//        }
-//
-//        if(lineStartPositionArrayList.size() == 1){
-//            lineStartPositionArrayList.get(0).x = blueBallPosition.x + 35;
-//            lineStartPositionArrayList.get(0).y = blueBallPosition.y + 35;
-//        }
-//        else{
-//            lineStartPositionArrayList.get(lineStartPositionArrayList.size() - 1).x =
-//                    lineEndPositionArrayList.get(lineStartPositionArrayList.size() - 2).x;
-//            lineStartPositionArrayList.get(lineStartPositionArrayList.size() - 1).y =
-//                    lineEndPositionArrayList.get(lineStartPositionArrayList.size() - 2).y;
-//        }
-//
-//        lineEndPositionArrayList.get(lineStartPositionArrayList.size() - 1).x = blueBallPosition.x + 35;
-//        lineEndPositionArrayList.get(lineStartPositionArrayList.size() - 1).y = blueBallPosition.y + 35;
     }
 
     @Override
