@@ -42,10 +42,16 @@ public class GameWindow implements Screen {
     String redBallScore;
     String scoreLabel;
 
-    GameWindow(final XonixNewEdition xonixNewEdition){
+    String timeout;
+    int areaToWin;
+
+    GameWindow(final XonixNewEdition xonixNewEdition, String timeout, String areaToWin){
         this.xonixNewEdition = xonixNewEdition;
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
+
+        this.areaToWin = Integer.parseInt(areaToWin.substring(0,2));
+        this.timeout = timeout;
 
         batch = new SpriteBatch();
         background = new Texture("background_game_window_old.png");
@@ -210,6 +216,11 @@ public class GameWindow implements Screen {
 
             blueBallScore = capturedAreaPercent.toString().
                     substring(0, capturedAreaPercent.toString().indexOf(".") + 2) + " %";
+
+            if(capturedAreaPercent >= areaToWin)
+                xonixNewEdition.setScreen(new StatisticsWindow(xonixNewEdition,
+                        capturedAreaPercent.toString().substring(0,
+                                capturedAreaPercent.toString().indexOf(".") + 2) + " %", timeout));
         }
     }
 
