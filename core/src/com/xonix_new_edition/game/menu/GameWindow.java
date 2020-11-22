@@ -33,6 +33,7 @@ public class GameWindow implements Screen {
     BlueBall.BlueBallDirection currentDirection;
 
     boolean captureBegin;
+    ArrayList<Vector2> points;
 
     Texture fieldTexture;
     Pixmap fieldPixmap;
@@ -98,6 +99,8 @@ public class GameWindow implements Screen {
         fieldTexture = new Texture(fieldPixmap);
 
         captureBegin = false;
+
+        points = new ArrayList<>();
     }
 
     @Override
@@ -109,6 +112,8 @@ public class GameWindow implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        //fieldGrid[((int)redBall.getPosition().x + 15) / 5][(659 - (int)redBall.getPosition().y + 15) / 5] = 2;
 
         for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
             for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
@@ -176,9 +181,12 @@ public class GameWindow implements Screen {
 
             if(captureBegin){
                 blueBall.setDefaultDirection();
+                fieldFill(((int)(redBall.getPosition().x - 15) / FIELD_CELL_SIZE),
+                        (int)((689 - redBall.getPosition().y - 15) / FIELD_CELL_SIZE));
             }
 
             captureBegin = false;
+
 
             for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
                 for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
@@ -215,5 +223,59 @@ public class GameWindow implements Screen {
         batch.dispose();
         background.dispose();
         shapeRenderer.dispose();
+    }
+
+    private boolean iter(int x, int y, int depth){ // Idea from YouTube
+        boolean ret1 = true, ret2 = true, ret3 = true, ret4 = true;
+
+        fieldGrid[x][y] = 7;
+
+        if(depth == 10){
+            points.add(new Vector2(x, y));
+            return false;
+        }
+
+        if(fieldGrid[x - 1][y] == 0){
+            ret1 = iter(x - 1, y, depth + 1);
+        }
+
+        if(fieldGrid[x + 1][y] == 0){
+            ret2 = iter(x + 1, y, depth + 1);
+        }
+
+        if(fieldGrid[x][y - 1] == 0){
+            ret3 = iter(x, y - 1, depth + 1);
+        }
+
+        if(fieldGrid[x][y + 1] == 0){
+            ret4 = iter(x, y + 1, depth + 1);
+        }
+
+        return ret1 && ret2 && ret3 && ret4;
+    }
+
+
+    private void fieldFill(int x, int y) { // Idea from YouTube
+
+        System.out.println(points.size());
+        //fieldGrid[x][y] = 2;
+        points.add(new Vector2(x, y));
+
+        for(int i = 0; i < points.size(); i++){
+            iter((int)points.get(i).x, (int)points.get(i).y, 0);
+            i = 0;
+            points.remove(0);
+        }
+
+        points.remove(0);
+
+        for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
+            for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++) {
+                if(fieldGrid[i][j] == 0)
+                    fieldGrid[i][j] = 2;
+                if(fieldGrid[i][j] == 7)
+                    fieldGrid[i][j] = 0;
+            }
+        }
     }
 }
