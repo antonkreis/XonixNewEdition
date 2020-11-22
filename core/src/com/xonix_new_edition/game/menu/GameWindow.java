@@ -3,6 +3,7 @@ package com.xonix_new_edition.game.menu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -27,8 +28,6 @@ public class GameWindow implements Screen {
     BlueBall blueBall;
     RedBall redBall;
     ShapeRenderer shapeRenderer;
-    ArrayList<Vector2> lineStartPositionArrayList;
-    ArrayList<Vector2> lineEndPositionArrayList;
     int amountOfLines;
     BlueBall.BlueBallDirection currentDirection;
 
@@ -37,6 +36,11 @@ public class GameWindow implements Screen {
 
     Texture fieldTexture;
     Pixmap fieldPixmap;
+
+    BitmapFont scoreTextFont;
+    String blueBallScore;
+    String redBallScore;
+    String scoreLabel;
 
     GameWindow(final XonixNewEdition xonixNewEdition){
         this.xonixNewEdition = xonixNewEdition;
@@ -66,13 +70,6 @@ public class GameWindow implements Screen {
         amountOfLines = 1;
         currentDirection = BlueBall.BlueBallDirection.DEFAULT;
 
-        lineStartPositionArrayList = new ArrayList<>();
-        lineEndPositionArrayList = new ArrayList<>();
-        for (int i = 0; i < amountOfLines; i++) {
-            lineStartPositionArrayList.add(new Vector2(45, 45));
-            lineEndPositionArrayList.add(new Vector2());
-        }
-
         fieldGrid = new int[980 / FIELD_CELL_SIZE][690 / FIELD_CELL_SIZE];
         for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
             for(int j = 0; j < 35 / FIELD_CELL_SIZE; j++) {
@@ -101,6 +98,12 @@ public class GameWindow implements Screen {
         captureBegin = false;
 
         points = new ArrayList<>();
+
+        blueBallScore = "0 %";
+        redBallScore = "0 %";
+        scoreLabel = "Score:";
+        scoreTextFont = new BitmapFont(Gdx.files.internal("font2.fnt"));
+
     }
 
     @Override
@@ -148,17 +151,22 @@ public class GameWindow implements Screen {
         batch.begin();
         batch.draw(background, 0, 0);
         batch.draw(fieldTexture, 0, 0);
-
+        scoreTextFont.setColor(Color.BLACK);
+        scoreTextFont.draw(batch, scoreLabel, 1090, 700);
+        scoreTextFont.setColor(Color.BLUE);
+        scoreTextFont.draw(batch, blueBallScore, 1110, 650);
+        scoreTextFont.setColor(Color.RED);
+        scoreTextFont.draw(batch, redBallScore, 1110, 600);
         blueBall.render(batch);
         redBall.render(batch);
         batch.end();
         stage.draw();
         update();
-
     }
 
     public void update(){
         Vector2 blueBallPosition = blueBall.getPosition();
+        int blueCellsCounter = 0;
 
         if(fieldGrid[((int)blueBallPosition.x + 15) / 5][(659 - (int)blueBallPosition.y + 15) / 5] == 1){
             captureBegin = false;
@@ -187,13 +195,16 @@ public class GameWindow implements Screen {
 
             captureBegin = false;
 
-
             for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
                 for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
                     if(fieldGrid[i][j] == 1)
                         fieldGrid[i][j] = 2;
+                    if(fieldGrid[i][j] == 2)
+                        blueCellsCounter++;
                 }
             }
+
+
         }
     }
 
@@ -219,13 +230,14 @@ public class GameWindow implements Screen {
 
     @Override
     public void dispose() {
+        scoreTextFont.dispose();
         fieldPixmap.dispose();
         batch.dispose();
         background.dispose();
         shapeRenderer.dispose();
     }
 
-    private boolean iter(int x, int y, int depth){ // Idea from YouTube
+    private boolean iter(int x, int y, int depth){ // Idea from YouTube https://www.youtube.com/watch?v=_5W5sYjDBnA
         boolean ret1 = true, ret2 = true, ret3 = true, ret4 = true;
 
         fieldGrid[x][y] = 7;
@@ -255,7 +267,7 @@ public class GameWindow implements Screen {
     }
 
 
-    private void fieldFill(int x, int y) { // Idea from YouTube
+    private void fieldFill(int x, int y) { // Idea from YouTube https://www.youtube.com/watch?v=_5W5sYjDBnA
 
         System.out.println(points.size());
         //fieldGrid[x][y] = 2;
