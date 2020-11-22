@@ -99,8 +99,8 @@ public class GameWindow implements Screen {
 
         points = new ArrayList<>();
 
-        blueBallScore = "0 %";
-        redBallScore = "0 %";
+        blueBallScore = "0.0 %";
+        redBallScore = "0.0 %";
         scoreLabel = "Score:";
         scoreTextFont = new BitmapFont(Gdx.files.internal("font2.fnt"));
 
@@ -154,9 +154,9 @@ public class GameWindow implements Screen {
         scoreTextFont.setColor(Color.BLACK);
         scoreTextFont.draw(batch, scoreLabel, 1090, 700);
         scoreTextFont.setColor(Color.BLUE);
-        scoreTextFont.draw(batch, blueBallScore, 1110, 650);
+        scoreTextFont.draw(batch, blueBallScore, 1090, 650);
         scoreTextFont.setColor(Color.RED);
-        scoreTextFont.draw(batch, redBallScore, 1110, 600);
+        scoreTextFont.draw(batch, redBallScore, 1090, 600);
         blueBall.render(batch);
         redBall.render(batch);
         batch.end();
@@ -166,7 +166,9 @@ public class GameWindow implements Screen {
 
     public void update(){
         Vector2 blueBallPosition = blueBall.getPosition();
-        int blueCellsCounter = 0;
+        float blueCellsCounter = 0;
+        int seaAreaMaxSize = (980 / FIELD_CELL_SIZE - 7 - 7) * (690 / FIELD_CELL_SIZE - 7 - 7);
+        Float capturedAreaPercent;
 
         if(fieldGrid[((int)blueBallPosition.x + 15) / 5][(659 - (int)blueBallPosition.y + 15) / 5] == 1){
             captureBegin = false;
@@ -204,7 +206,10 @@ public class GameWindow implements Screen {
                 }
             }
 
+            capturedAreaPercent = blueCellsCounter / seaAreaMaxSize * 100;
 
+            blueBallScore = capturedAreaPercent.toString().
+                    substring(0, capturedAreaPercent.toString().indexOf(".") + 2) + " %";
         }
     }
 
@@ -237,49 +242,66 @@ public class GameWindow implements Screen {
         shapeRenderer.dispose();
     }
 
-    private boolean iter(int x, int y, int depth){ // Idea from YouTube https://www.youtube.com/watch?v=_5W5sYjDBnA
-        boolean ret1 = true, ret2 = true, ret3 = true, ret4 = true;
+//    private boolean iter(int x, int y, int depth){ // Idea from YouTube https://www.youtube.com/watch?v=_5W5sYjDBnA
+//        boolean ret1 = true, ret2 = true, ret3 = true, ret4 = true;
+//
+//        fieldGrid[x][y] = 7;
+//
+//        if(depth == 10){
+//            points.add(new Vector2(x, y));
+//            return false;
+//        }
+//
+//        if(fieldGrid[x - 1][y] == 0){
+//            ret1 = iter(x - 1, y, depth + 1);
+//        }
+//
+//        if(fieldGrid[x + 1][y] == 0){
+//            ret2 = iter(x + 1, y, depth + 1);
+//        }
+//
+//        if(fieldGrid[x][y - 1] == 0){
+//            ret3 = iter(x, y - 1, depth + 1);
+//        }
+//
+//        if(fieldGrid[x][y + 1] == 0){
+//            ret4 = iter(x, y + 1, depth + 1);
+//        }
+//
+//        return ret1 && ret2 && ret3 && ret4;
+//    }
 
-        fieldGrid[x][y] = 7;
-
+    private void fieldFillIteration(int x, int y, int depth){ // Idea from YouTube https://www.youtube.com/watch?v=_5W5sYjDBnA
+                                                              // and https://lodev.org/cgtutor/floodfill.html#Introduction_
         if(depth == 10){
             points.add(new Vector2(x, y));
-            return false;
+            return;
         }
 
-        if(fieldGrid[x - 1][y] == 0){
-            ret1 = iter(x - 1, y, depth + 1);
-        }
+        if(fieldGrid[x][y] == 0){
+            fieldGrid[x][y] = 7;
 
-        if(fieldGrid[x + 1][y] == 0){
-            ret2 = iter(x + 1, y, depth + 1);
+            fieldFillIteration(x - 1, y, depth + 1);
+            fieldFillIteration(x + 1, y, depth + 1);
+            fieldFillIteration(x, y - 1, depth + 1);
+            fieldFillIteration(x, y + 1, depth + 1);
         }
-
-        if(fieldGrid[x][y - 1] == 0){
-            ret3 = iter(x, y - 1, depth + 1);
-        }
-
-        if(fieldGrid[x][y + 1] == 0){
-            ret4 = iter(x, y + 1, depth + 1);
-        }
-
-        return ret1 && ret2 && ret3 && ret4;
     }
 
-
     private void fieldFill(int x, int y) { // Idea from YouTube https://www.youtube.com/watch?v=_5W5sYjDBnA
-
-        System.out.println(points.size());
+                                           // and https://lodev.org/cgtutor/floodfill.html#Introduction_
+        //System.out.println(points.size());
         //fieldGrid[x][y] = 2;
         points.add(new Vector2(x, y));
 
         for(int i = 0; i < points.size(); i++){
-            iter((int)points.get(i).x, (int)points.get(i).y, 0);
+            fieldFillIteration((int)points.get(i).x, (int)points.get(i).y, 0);
             i = 0;
             points.remove(0);
         }
 
-        points.remove(0);
+        if(points.size() != 0)
+            points.remove(0);
 
         for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
             for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++) {
