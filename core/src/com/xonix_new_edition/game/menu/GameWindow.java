@@ -37,13 +37,19 @@ public class GameWindow implements Screen {
     Texture fieldTexture;
     Pixmap fieldPixmap;
 
-    BitmapFont scoreTextFont;
+    BitmapFont textFont;
     String blueBallScore;
     String redBallScore;
     String scoreLabel;
+    String timeLabel;
+    String time;
 
     String timeout;
+    int timeoutInt;
     int areaToWin;
+    float rawTimeSinceStart = 0;
+    int minutes;
+    int seconds;
 
     GameWindow(final XonixNewEdition xonixNewEdition, String timeout, String areaToWin){
         this.xonixNewEdition = xonixNewEdition;
@@ -52,6 +58,7 @@ public class GameWindow implements Screen {
 
         this.areaToWin = Integer.parseInt(areaToWin.substring(0,2));
         this.timeout = timeout;
+        this.timeoutInt = Integer.parseInt(timeout.substring(0, 1));
 
         batch = new SpriteBatch();
         background = new Texture("background_game_window_old.png");
@@ -108,8 +115,13 @@ public class GameWindow implements Screen {
         blueBallScore = "0.0 %";
         redBallScore = "0.0 %";
         scoreLabel = "Score:";
-        scoreTextFont = new BitmapFont(Gdx.files.internal("font2.fnt"));
 
+        timeLabel = "Time:";
+        time = timeout.substring(0, 1) + ".00";
+        minutes = Integer.parseInt(timeout.substring(0, 1));
+        seconds = 0;
+
+        textFont = new BitmapFont(Gdx.files.internal("font2.fnt"));
     }
 
     @Override
@@ -121,6 +133,8 @@ public class GameWindow implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+
 
         //fieldGrid[((int)redBall.getPosition().x + 15) / 5][(659 - (int)redBall.getPosition().y + 15) / 5] = 2;
 
@@ -157,17 +171,36 @@ public class GameWindow implements Screen {
         batch.begin();
         batch.draw(background, 0, 0);
         batch.draw(fieldTexture, 0, 0);
-        scoreTextFont.setColor(Color.BLACK);
-        scoreTextFont.draw(batch, scoreLabel, 1090, 700);
-        scoreTextFont.setColor(Color.BLUE);
-        scoreTextFont.draw(batch, blueBallScore, 1090, 650);
-        scoreTextFont.setColor(Color.RED);
-        scoreTextFont.draw(batch, redBallScore, 1090, 600);
+        textFont.setColor(Color.BLACK);
+        textFont.draw(batch, scoreLabel, 1020, 700);
+        textFont.setColor(Color.BLUE);
+        textFont.draw(batch, blueBallScore, 1090, 650);
+        textFont.setColor(Color.RED);
+        textFont.draw(batch, redBallScore, 1090, 600);
+        textFont.setColor(Color.BLACK);
+        textFont.draw(batch, timeLabel, 1020, 550);
+        if(seconds < 10 && seconds >= 0)
+            textFont.draw(batch, minutes + ":0" + seconds, 1090, 500);
+        else
+            textFont.draw(batch, minutes + ":" + seconds, 1090, 500);
         blueBall.render(batch);
         redBall.render(batch);
         batch.end();
         stage.draw();
         update();
+
+        rawTimeSinceStart += Gdx.graphics.getRawDeltaTime(); //Info about time counting: https://stackoverrun.com/ru/q/11987174
+
+        if(rawTimeSinceStart >= 1){
+            rawTimeSinceStart--;
+
+            if(seconds == 0){
+                seconds = 59;
+                minutes--;
+            }
+            else
+                seconds--;
+        }
     }
 
     public void update(){
@@ -217,10 +250,15 @@ public class GameWindow implements Screen {
             blueBallScore = capturedAreaPercent.toString().
                     substring(0, capturedAreaPercent.toString().indexOf(".") + 2) + " %";
 
-            if(capturedAreaPercent >= areaToWin)
-                xonixNewEdition.setScreen(new StatisticsWindow(xonixNewEdition,
+            if(capturedAreaPercent >= areaToWin || (minutes == 0 && seconds == 0))
+                if(seconds < 10 && seconds >= 0)
+                    xonixNewEdition.setScreen(new StatisticsWindow(xonixNewEdition,
                         capturedAreaPercent.toString().substring(0,
-                                capturedAreaPercent.toString().indexOf(".") + 2) + " %", timeout));
+                                capturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":0" + seconds));
+                else
+                    xonixNewEdition.setScreen(new StatisticsWindow(xonixNewEdition,
+                            capturedAreaPercent.toString().substring(0,
+                                    capturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":" + seconds));
         }
     }
 
@@ -246,7 +284,7 @@ public class GameWindow implements Screen {
 
     @Override
     public void dispose() {
-        scoreTextFont.dispose();
+        textFont.dispose();
         fieldPixmap.dispose();
         batch.dispose();
         background.dispose();
