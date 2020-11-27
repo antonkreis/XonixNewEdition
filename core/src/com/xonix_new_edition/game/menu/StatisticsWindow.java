@@ -23,13 +23,21 @@ public class StatisticsWindow implements Screen {
     BitmapFont textFont;
     String timeout;
     String capturedAreaPercent;
+    String winnerLabel;
+    String place2Label;
+    String timeSpentLabel;
+    String winnerNickname;
+    String place2Nickname;
 
-    StatisticsWindow(final XonixNewEdition xonixNewEdition, String capturedAreaPercent, String timeout){
+    StatisticsWindow(final XonixNewEdition xonixNewEdition,
+                     String capturedAreaPercent, String timeout, String winnerNickname, String place2Nickname){
         this.xonixNewEdition = xonixNewEdition;
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         this.capturedAreaPercent = capturedAreaPercent;
         this.timeout = timeout;
+        this.winnerNickname = winnerNickname;
+        this.place2Nickname = place2Nickname;
 
         batch = new SpriteBatch();
         background = new Texture("statistics_background.png");
@@ -49,6 +57,10 @@ public class StatisticsWindow implements Screen {
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 1280, 720);
+
+        winnerLabel = "The winner:";
+        place2Label = "The second place:";
+        timeSpentLabel = "Time spent: ";
     }
 
     @Override
@@ -64,8 +76,15 @@ public class StatisticsWindow implements Screen {
         batch.begin();
         batch.draw(background, 0, 0);
         textFont.setColor(Color.BLACK);
-        textFont.draw(batch, timeout, 280, 415);
-        textFont.draw(batch, capturedAreaPercent, 325, 515);
+        textFont.draw(batch, winnerLabel, 800, 560);
+        textFont.setColor(Color.BLUE);
+        textFont.draw(batch, winnerNickname + " - " + capturedAreaPercent, 810, 510);
+        textFont.setColor(Color.BLACK);
+        textFont.draw(batch, place2Label, 800, 460);
+        textFont.setColor(Color.RED);
+        textFont.setColor(Color.BLACK);
+        textFont.draw(batch, timeSpentLabel + timeout, 700, 310);
+
         batch.end();
 
         stage.draw();

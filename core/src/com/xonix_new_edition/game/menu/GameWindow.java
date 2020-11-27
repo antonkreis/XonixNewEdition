@@ -43,6 +43,7 @@ public class GameWindow implements Screen {
     String scoreLabel;
     String timeLabel;
     String time;
+    String nickname;
 
     String timeout;
     int timeoutInt;
@@ -51,7 +52,7 @@ public class GameWindow implements Screen {
     int minutes;
     int seconds;
 
-    GameWindow(final XonixNewEdition xonixNewEdition, String timeout, String areaToWin){
+    GameWindow(final XonixNewEdition xonixNewEdition, String timeout, String areaToWin, String nickname){
         this.xonixNewEdition = xonixNewEdition;
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
@@ -59,6 +60,7 @@ public class GameWindow implements Screen {
         this.areaToWin = Integer.parseInt(areaToWin.substring(0,2));
         this.timeout = timeout;
         this.timeoutInt = Integer.parseInt(timeout.substring(0, 1));
+        this.nickname = nickname;
 
         batch = new SpriteBatch();
         background = new Texture("background_game_window_old.png");
@@ -254,11 +256,11 @@ public class GameWindow implements Screen {
                 if(seconds < 10 && seconds >= 0)
                     xonixNewEdition.setScreen(new StatisticsWindow(xonixNewEdition,
                         capturedAreaPercent.toString().substring(0,
-                                capturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":0" + seconds));
+                                capturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":0" + seconds, nickname, " "));
                 else
                     xonixNewEdition.setScreen(new StatisticsWindow(xonixNewEdition,
                             capturedAreaPercent.toString().substring(0,
-                                    capturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":" + seconds));
+                                    capturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":" + seconds, nickname, " "));
         }
     }
 

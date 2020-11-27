@@ -48,7 +48,7 @@ public class MainWindow implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 //System.out.println("Hi");
-                xonixNewEdition.setScreen(new ConfigurationWindow(xonixNewEdition));
+                xonixNewEdition.setScreen(new ConfigurationWindow(xonixNewEdition, nickname));
             }
         });
         stage.addActor(joinButton.textButton);

@@ -29,7 +29,7 @@ public class ConfigurationWindow implements Screen {
     String timeout;
     String areaToWin;
 
-    ConfigurationWindow(final XonixNewEdition xonixNewEdition){
+    ConfigurationWindow(final XonixNewEdition xonixNewEdition, final String nickname){
         this.xonixNewEdition = xonixNewEdition;
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
@@ -53,7 +53,7 @@ public class ConfigurationWindow implements Screen {
         startButton.textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                xonixNewEdition.setScreen(new GameWindow(xonixNewEdition, timeout, areaToWin));
+                xonixNewEdition.setScreen(new GameWindow(xonixNewEdition, timeout, areaToWin, nickname));
             }
         });
         stage.addActor(startButton.textButton);
