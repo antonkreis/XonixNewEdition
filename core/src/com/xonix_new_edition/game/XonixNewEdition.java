@@ -1,8 +1,6 @@
 package com.xonix_new_edition.game;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.xonix_new_edition.game.menu.MainWindow;
 
 public class XonixNewEdition extends Game {

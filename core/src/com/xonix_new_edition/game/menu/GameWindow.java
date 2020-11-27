@@ -12,6 +12,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.xonix_new_edition.game.XonixNewEdition;
 
+import java.io.ObjectInputStream; //Source: Internet
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 
 public class GameWindow implements Screen {
@@ -51,6 +55,12 @@ public class GameWindow implements Screen {
     float rawTimeSinceStart = 0;
     int minutes;
     int seconds;
+
+    private static ServerSocket serverSocket; //Source: Internet
+    private static Socket socket;
+    private static ObjectOutputStream outputStream;
+    private static ObjectInputStream inputStream;
+    private static int readBytes;
 
     GameWindow(final XonixNewEdition xonixNewEdition, String timeout, String areaToWin, final String nickname){
         this.xonixNewEdition = xonixNewEdition;

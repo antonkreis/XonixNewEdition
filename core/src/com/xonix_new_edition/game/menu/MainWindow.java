@@ -11,28 +11,37 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.xonix_new_edition.game.XonixNewEdition;
+
+import java.io.IOException; //Source: Internet
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 
 public class MainWindow implements Screen {
     Stage stage;
     XonixNewEdition xonixNewEdition;
     Button joinButton;
+    Button createButton;
     Button nicknameButton;
     SpriteBatch batch;
     Texture background;
     OrthographicCamera camera;
     BitmapFont nicknameTextFont;
     TextField nicknameField;
-    String nickname;
-    String newNickname;
+    String mainWindowNickname;
     String spaces;
     int nicknameLength;
 
+    static private Socket socket; //Source: Internet
+    static private ObjectInputStream inputStream;
+    static private ObjectOutputStream outputStream;
+
+
     public MainWindow(final XonixNewEdition xonixNewEdition, final String nickname){
-        this.newNickname = nickname;
+        this.mainWindowNickname = nickname;
         this.xonixNewEdition = xonixNewEdition;
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
@@ -47,23 +56,42 @@ public class MainWindow implements Screen {
        // skin = new Skin(Gdx.files.internal("skin.json"));
        // nicknameField = new TextField("Enter your nickname", skin);
 
-        joinButton = new Button(xonixNewEdition, "join_button_up.png",
+        joinButton = new Button(xonixNewEdition, "create_button_up.png",
                 "rect_button_down.png", 1000, 200);
         joinButton.textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                //System.out.println("Hi");
-                xonixNewEdition.setScreen(new ConfigurationWindow(xonixNewEdition, nickname));
+                xonixNewEdition.setScreen(new ConfigurationWindow(xonixNewEdition, mainWindowNickname));
             }
         });
         stage.addActor(joinButton.textButton);
+
+        createButton = new Button(xonixNewEdition, "join_button_up.png",
+                "rect_button_down.png", 1000, 300);
+        createButton.textButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                try { //Source: Internet
+                    socket = new Socket("localhost", 19000);
+
+                    outputStream = new ObjectOutputStream(socket.getOutputStream());
+                    inputStream = new ObjectInputStream(socket.getInputStream());
+
+                    String message = "Hello, World!";
+                    outputStream.write(message.getBytes());
+                    outputStream.flush();
+                } catch (IOException e) {
+                    xonixNewEdition.setScreen(new ErrorWindow(xonixNewEdition, mainWindowNickname, false));
+                }
+            }
+        });
+        stage.addActor(createButton.textButton);
 
         nicknameButton = new Button(xonixNewEdition, "nickname_button_up.png",
                 "rect_button_down.png", 1000, 100);
         nicknameButton.textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                //System.out.println("Hi");
                 Input.TextInputListener textListener = new Input.TextInputListener()
                 {
                     @Override
@@ -72,14 +100,13 @@ public class MainWindow implements Screen {
                         if(input.length() > 12)
                             input = input.substring(0, 12);
                         nicknameLength = input.length();
-                        newNickname = input;
+                        mainWindowNickname = input;
                         System.out.println(input);
                     }
 
                     @Override
                     public void canceled()
                     {
-                        System.out.println("Aborted");
                     }
                 };
 
@@ -87,7 +114,6 @@ public class MainWindow implements Screen {
             }
         });
 
-        this.nickname = newNickname;
         stage.addActor(nicknameButton.textButton);
         //Gdx.input.setInputProcessor(nicknameButton);
 
@@ -112,8 +138,7 @@ public class MainWindow implements Screen {
         for(int i = 0; i < 12 - nicknameLength; i++){
             spaces += "_";
         }
-        nicknameTextFont.draw(batch,"Nickname: " + spaces + nickname, 500, 155);
-        //System.out.println(spaces+ nickname);
+        nicknameTextFont.draw(batch,"Nickname: " + spaces + mainWindowNickname, 500, 155);
         batch.end();
         //joinButton.draw();
         stage.draw();
