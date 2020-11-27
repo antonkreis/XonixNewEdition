@@ -27,11 +27,12 @@ public class MainWindow implements Screen {
     BitmapFont nicknameTextFont;
     TextField nicknameField;
     String nickname;
+    String newNickname;
     String spaces;
     int nicknameLength;
 
-    public MainWindow(final XonixNewEdition xonixNewEdition){
-        nickname = "player";
+    public MainWindow(final XonixNewEdition xonixNewEdition, final String nickname){
+        this.newNickname = nickname;
         this.xonixNewEdition = xonixNewEdition;
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
@@ -39,6 +40,7 @@ public class MainWindow implements Screen {
         nicknameTextFont = new BitmapFont(Gdx.files.internal("font2.fnt"));
         nicknameTextFont.setColor(Color.BLACK);
         nicknameLength = nickname.length();
+
         //nicknameTextFont.getData().setScale(1);
 
         batch = new SpriteBatch();
@@ -67,10 +69,10 @@ public class MainWindow implements Screen {
                     @Override
                     public void input(String input)
                     {
-                        if(input.length() > 16)
-                            input = input.substring(0, 16);
+                        if(input.length() > 12)
+                            input = input.substring(0, 12);
                         nicknameLength = input.length();
-                        nickname = input;
+                        newNickname = input;
                         System.out.println(input);
                     }
 
@@ -81,9 +83,11 @@ public class MainWindow implements Screen {
                     }
                 };
 
-                Gdx.input.getTextInput(textListener, "Enter your nickname: ", "", "");
+                Gdx.input.getTextInput(textListener, "Enter your nickname (12 symbols): ", "", "");
             }
         });
+
+        this.nickname = newNickname;
         stage.addActor(nicknameButton.textButton);
         //Gdx.input.setInputProcessor(nicknameButton);
 
@@ -105,10 +109,10 @@ public class MainWindow implements Screen {
         //batch.draw(img, 0, 0);
         batch.draw(background, 0, 0);
         spaces = "";
-        for(int i = 0; i < 16 - nicknameLength; i++){
+        for(int i = 0; i < 12 - nicknameLength; i++){
             spaces += "_";
         }
-        nicknameTextFont.draw(batch,"Nickname: " + spaces + nickname, 430, 155);
+        nicknameTextFont.draw(batch,"Nickname: " + spaces + nickname, 500, 155);
         //System.out.println(spaces+ nickname);
         batch.end();
         //joinButton.draw();

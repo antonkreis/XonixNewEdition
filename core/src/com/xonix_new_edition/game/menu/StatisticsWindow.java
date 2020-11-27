@@ -30,7 +30,7 @@ public class StatisticsWindow implements Screen {
     String place2Nickname;
 
     StatisticsWindow(final XonixNewEdition xonixNewEdition,
-                     String capturedAreaPercent, String timeout, String winnerNickname, String place2Nickname){
+                     String capturedAreaPercent, String timeout, final String winnerNickname, String place2Nickname){
         this.xonixNewEdition = xonixNewEdition;
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
@@ -48,7 +48,7 @@ public class StatisticsWindow implements Screen {
         backButton.textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                xonixNewEdition.setScreen(new MainWindow(xonixNewEdition));
+                xonixNewEdition.setScreen(new MainWindow(xonixNewEdition, winnerNickname));
             }
         });
         stage.addActor(backButton.textButton);

@@ -52,7 +52,7 @@ public class GameWindow implements Screen {
     int minutes;
     int seconds;
 
-    GameWindow(final XonixNewEdition xonixNewEdition, String timeout, String areaToWin, String nickname){
+    GameWindow(final XonixNewEdition xonixNewEdition, String timeout, String areaToWin, final String nickname){
         this.xonixNewEdition = xonixNewEdition;
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
@@ -73,7 +73,7 @@ public class GameWindow implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 System.out.println("leaveButton");
-                xonixNewEdition.setScreen(new MainWindow(xonixNewEdition));
+                xonixNewEdition.setScreen(new MainWindow(xonixNewEdition, nickname));
             }
         });
         stage.addActor(leaveButton.textButton);
@@ -176,15 +176,16 @@ public class GameWindow implements Screen {
         textFont.setColor(Color.BLACK);
         textFont.draw(batch, scoreLabel, 1020, 700);
         textFont.setColor(Color.BLUE);
-        textFont.draw(batch, blueBallScore, 1090, 650);
+        textFont.draw(batch, nickname + ":", 1020, 650);
+        textFont.draw(batch, blueBallScore, 1090, 600);
         textFont.setColor(Color.RED);
-        textFont.draw(batch, redBallScore, 1090, 600);
+        textFont.draw(batch, redBallScore, 1090, 550);
         textFont.setColor(Color.BLACK);
-        textFont.draw(batch, timeLabel, 1020, 550);
+        textFont.draw(batch, timeLabel, 1020, 500);
         if(seconds < 10 && seconds >= 0)
-            textFont.draw(batch, minutes + ":0" + seconds, 1090, 500);
+            textFont.draw(batch, minutes + ":0" + seconds, 1090, 450);
         else
-            textFont.draw(batch, minutes + ":" + seconds, 1090, 500);
+            textFont.draw(batch, minutes + ":" + seconds, 1090, 450);
         blueBall.render(batch);
         redBall.render(batch);
         batch.end();

@@ -61,7 +61,7 @@ public class ConfigurationWindow implements Screen {
         backButton.textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                xonixNewEdition.setScreen(new MainWindow(xonixNewEdition));
+                xonixNewEdition.setScreen(new MainWindow(xonixNewEdition, nickname));
             }
         });
         stage.addActor(backButton.textButton);
