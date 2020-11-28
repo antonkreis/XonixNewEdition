@@ -44,6 +44,11 @@ public class BlueBall {
         return position;
     }
 
+    public void setPosition(int x, int y){
+        position.x = x;
+        position.y = y;
+    }
+
     public void render(SpriteBatch batch){
         batch.draw(texture, position.x, position.y);
     }

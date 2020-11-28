@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.xonix_new_edition.game.XonixNewEdition;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream; //Source: Internet
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
@@ -37,7 +36,11 @@ public class GameWindowClient implements Screen {
     int amountOfLines;
     RedBall.RedBallDirection currentDirection;
 
-    boolean captureBegin;
+    boolean redCaptureBegin;
+    boolean blueCaptureBegin;
+    boolean redCaptureAborted;
+    boolean blueCaptureAborted;
+
     ArrayList<Vector2> points;
 
     Texture fieldTexture;
@@ -68,6 +71,13 @@ public class GameWindowClient implements Screen {
 
     byte[] configurationInputSequence;
     byte[] configurationOutputSequence;
+    byte[] gameStatusInputSequence;
+    byte[] gameStatusOutputSequence;
+
+    int redBallPositionX;
+    int redBallPositionY;
+    int blueBallPositionX;
+    int blueBallPositionY;
 
     GameWindowClient(final XonixNewEdition xonixNewEdition, final String nickname, final Socket socket){
         this.xonixNewEdition = xonixNewEdition;
@@ -127,7 +137,10 @@ public class GameWindowClient implements Screen {
         fieldPixmap.setColor(Color.BROWN);
         fieldTexture = new Texture(fieldPixmap);
 
-        captureBegin = false;
+        redCaptureBegin = false;
+        blueCaptureBegin = false;
+        redCaptureAborted = false;
+        blueCaptureAborted = false;
 
         points = new ArrayList<>();
 
@@ -171,12 +184,8 @@ public class GameWindowClient implements Screen {
         minutes = timeoutInt;
         seconds = 0;
 
-        try {
-            outputStream.write(configurationOutputSequence);
-            outputStream.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        gameStatusInputSequence = new byte[5];
+        gameStatusOutputSequence = new byte[5];
     }
 
     @Override
@@ -269,13 +278,71 @@ public class GameWindowClient implements Screen {
     }
 
     public void update(){
+
+        redBallPositionX = (int)redBall.getPosition().x;
+        redBallPositionY = (int)redBall.getPosition().y;
+        System.out.println("a");
+
+
+        for(int i = 0; i < 5; i++){
+            gameStatusOutputSequence[i] = 0;
+        }
+
+        for (int i = 0; i < 8; i++){
+            if ((redBallPositionX & (1 << (i + 8))) != 0)
+                gameStatusOutputSequence[0] |= (1 << i);
+            if ((redBallPositionX & (1 << i)) != 0)
+                gameStatusOutputSequence[1] |= (1 << i);
+
+            if ((redBallPositionY & (1 << (i + 8))) != 0)
+                gameStatusOutputSequence[2] |= (1 << i);
+            if ((redBallPositionY & (1 << i)) != 0)
+                gameStatusOutputSequence[3] |= (1 << i);
+        }
+
+        System.out.println( gameStatusOutputSequence[0]);
+
+        try {
+            outputStream.write(gameStatusOutputSequence);
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            inputStream.read(gameStatusInputSequence);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        blueBallPositionX = 0;
+        blueBallPositionY = 0;
+
+        for (int i = 0; i < 8; i++){
+            if ((gameStatusInputSequence[0] & (1 << i)) != 0)
+                blueBallPositionX |= (1 << (i + 8));
+            if ((gameStatusInputSequence[1] & (1 << i)) != 0)
+                blueBallPositionX |= (1 << (i ));
+            if ((gameStatusInputSequence[2] & (1 << i)) != 0)
+                blueBallPositionY |= (1 << (i + 8));
+            if ((gameStatusInputSequence[3] & (1 << i)) != 0)
+                blueBallPositionY |= (1 << (i ));
+        }
+
+        blueBall.setPosition(blueBallPositionX, blueBallPositionY);
+
+
         Vector2 redBallPosition = redBall.getPosition();
+        Vector2 blueBallPosition = blueBall.getPosition();
         float redCellsCounter = 0;
+        float blueCellsCounter = 0;
         int seaAreaMaxSize = (980 / FIELD_CELL_SIZE - 7 - 7) * (690 / FIELD_CELL_SIZE - 7 - 7);
-        Float capturedAreaPercent;
+        Float redCapturedAreaPercent;
+        Float blueCapturedAreaPercent;
 
         if(fieldGrid[((int)redBallPosition.x + 15) / 5][(659 - (int)redBallPosition.y + 15) / 5] == 11){
-            captureBegin = false;
+            redCaptureBegin = false;
+            redCaptureAborted = true;
             for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
                 for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
                     if(fieldGrid[i][j] == 11)
@@ -284,22 +351,49 @@ public class GameWindowClient implements Screen {
             }
         }
 
-        if(fieldGrid[((int)redBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)redBallPosition.y - 15) / FIELD_CELL_SIZE] != 3
-                && fieldGrid[((int)redBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)redBallPosition.y - 15) / FIELD_CELL_SIZE] != 12){
-            fieldGrid[((int)redBallPosition.x + 15) / 5][(689 - (int)redBallPosition.y - 15) / 5] = 11;
-            captureBegin = true;
+        if((fieldGrid[((int)redBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)redBallPosition.y - 15) / FIELD_CELL_SIZE] == 3
+                || fieldGrid[((int)redBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)redBallPosition.y - 15) / FIELD_CELL_SIZE] == 12
+                || fieldGrid[((int)redBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)redBallPosition.y - 15) / FIELD_CELL_SIZE] == 2)
+                && redCaptureAborted) {
+            redCaptureAborted = false;
+            redBall.setDefaultDirection();
         }
 
+        if(fieldGrid[((int)blueBallPosition.x + 15) / 5][(659 - (int)blueBallPosition.y + 15) / 5] == 1){
+            blueCaptureBegin = false;
+            for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
+                for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
+                    if(fieldGrid[i][j] == 1)
+                        fieldGrid[i][j] = 0;
+                }
+            }
+        }
+
+        if(fieldGrid[((int)redBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)redBallPosition.y - 15) / FIELD_CELL_SIZE] != 3
+                && fieldGrid[((int)redBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)redBallPosition.y - 15) / FIELD_CELL_SIZE] != 12
+                && fieldGrid[((int)redBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)redBallPosition.y - 15) / FIELD_CELL_SIZE] != 2
+                && !redCaptureAborted){
+            fieldGrid[((int)redBallPosition.x + 15) / 5][(689 - (int)redBallPosition.y - 15) / 5] = 11;
+            redCaptureBegin = true;
+        }
         else{
-            if(captureBegin){
+            if(redCaptureBegin){
                 redBall.setDefaultDirection();
                 if(fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 3
-                        && fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 12)
-                    fieldFill(((int)(redBall.getPosition().x - 15) / FIELD_CELL_SIZE),
-                            (int)((689 - redBall.getPosition().y - 15) / FIELD_CELL_SIZE));
+                        && fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 12
+                        && fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 2)
+                    fieldFill(((int)(blueBall.getPosition().x - 15) / FIELD_CELL_SIZE),
+                            (int)((689 - blueBall.getPosition().y - 15) / FIELD_CELL_SIZE), true);
+                else
+                    for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
+                        for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
+                            if(fieldGrid[i][j] == 11)
+                                fieldGrid[i][j] = 0;
+                        }
+                    }
             }
 
-            captureBegin = false;
+            redCaptureBegin = false;
 
             for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
                 for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
@@ -310,20 +404,65 @@ public class GameWindowClient implements Screen {
                 }
             }
 
-            capturedAreaPercent = redCellsCounter / seaAreaMaxSize * 100;
+            redCapturedAreaPercent = redCellsCounter / seaAreaMaxSize * 100;
 
-            redBallScore = capturedAreaPercent.toString().
-                    substring(0, capturedAreaPercent.toString().indexOf(".") + 2) + " %";
+            redBallScore = redCapturedAreaPercent.toString().
+                    substring(0, redCapturedAreaPercent.toString().indexOf(".") + 2) + " %";
 
-            if(capturedAreaPercent >= areaToWin || (minutes == 0 && seconds == 0))
+            if(redCapturedAreaPercent >= areaToWin || (minutes == 0 && seconds == 0))
                 if(seconds < 10 && seconds >= 0)
                     xonixNewEdition.setScreen(new StatisticsWindow(xonixNewEdition,
-                            capturedAreaPercent.toString().substring(0,
-                                    capturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":0" + seconds, nickname, " "));
+                            redCapturedAreaPercent.toString().substring(0,
+                                    redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":0" + seconds, nickname, " "));
                 else
                     xonixNewEdition.setScreen(new StatisticsWindow(xonixNewEdition,
-                            capturedAreaPercent.toString().substring(0,
-                                    capturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":" + seconds, nickname, " "));
+                            redCapturedAreaPercent.toString().substring(0,
+                                    redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":" + seconds, nickname, " "));
+        }
+
+        if(fieldGrid[((int)blueBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - 15) / FIELD_CELL_SIZE] != 3
+                && fieldGrid[((int)blueBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - 15) / FIELD_CELL_SIZE] != 2){
+            fieldGrid[((int)blueBallPosition.x + 15) / 5][(689 - (int)blueBallPosition.y - 15) / 5] = 1;
+            blueCaptureBegin = true;
+        }
+        else{
+            if(blueCaptureBegin){
+                blueBall.setDefaultDirection();
+                if(fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 3
+                        && fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 2
+                        && fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 12)
+                    fieldFill(((int)(redBall.getPosition().x - 15) / FIELD_CELL_SIZE),
+                            (int)((689 - redBall.getPosition().y - 15) / FIELD_CELL_SIZE), false);
+            }
+
+            blueCaptureBegin = false;
+
+            for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
+                for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
+                    if(fieldGrid[i][j] == 1)
+                        fieldGrid[i][j] = 2;
+                    if(fieldGrid[i][j] == 2)
+                        blueCellsCounter++;
+                }
+            }
+
+            redCapturedAreaPercent = redCellsCounter / seaAreaMaxSize * 100;
+            blueCapturedAreaPercent = blueCellsCounter / seaAreaMaxSize * 100;
+
+            redBallScore = redCapturedAreaPercent.toString().
+                    substring(0, redCapturedAreaPercent.toString().indexOf(".") + 2) + " %";
+            blueBallScore = blueCapturedAreaPercent.toString().
+                    substring(0, blueCapturedAreaPercent.toString().indexOf(".") + 2) + " %";
+
+            if(blueCapturedAreaPercent >= areaToWin || (minutes == 0 && seconds == 0))
+                if(seconds < 10 && seconds >= 0)
+                    xonixNewEdition.setScreen(new StatisticsWindow(xonixNewEdition,
+                            redCapturedAreaPercent.toString().substring(0,
+                                    redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":0" + seconds, nickname, " "));
+                else
+                    xonixNewEdition.setScreen(new StatisticsWindow(xonixNewEdition,
+                            redCapturedAreaPercent.toString().substring(0,
+                                    redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":" + seconds, nickname, " "));
         }
     }
 
@@ -356,7 +495,7 @@ public class GameWindowClient implements Screen {
         shapeRenderer.dispose();
     }
 
-    private void fieldFillIteration(int x, int y, int depth){ // Idea from YouTube https://www.youtube.com/watch?v=_5W5sYjDBnA
+    private void fieldFillIteration(int x, int y, int depth, boolean isRed){ // Idea from YouTube https://www.youtube.com/watch?v=_5W5sYjDBnA
         // and https://lodev.org/cgtutor/floodfill.html#Introduction_
         if(depth == 10){
             points.add(new Vector2(x, y));
@@ -364,23 +503,26 @@ public class GameWindowClient implements Screen {
         }
 
         if(fieldGrid[x][y] == 0){
-            fieldGrid[x][y] = 17;
+            if(isRed)
+                fieldGrid[x][y] = 17;
+            else
+                fieldGrid[x][y] = 7;
 
-            fieldFillIteration(x - 1, y, depth + 1);
-            fieldFillIteration(x + 1, y, depth + 1);
-            fieldFillIteration(x, y - 1, depth + 1);
-            fieldFillIteration(x, y + 1, depth + 1);
+            fieldFillIteration(x - 1, y, depth + 1, isRed);
+            fieldFillIteration(x + 1, y, depth + 1, isRed);
+            fieldFillIteration(x, y - 1, depth + 1, isRed);
+            fieldFillIteration(x, y + 1, depth + 1, isRed);
         }
     }
 
-    private void fieldFill(int x, int y) { // Idea from YouTube https://www.youtube.com/watch?v=_5W5sYjDBnA
+    private void fieldFill(int x, int y, boolean isRed) { // Idea from YouTube https://www.youtube.com/watch?v=_5W5sYjDBnA
         // and https://lodev.org/cgtutor/floodfill.html#Introduction_
         //System.out.println(points.size());
         //fieldGrid[x][y] = 2;
         points.add(new Vector2(x, y));
 
         for(int i = 0; i < points.size(); i++){
-            fieldFillIteration((int)points.get(i).x, (int)points.get(i).y, 0);
+            fieldFillIteration((int)points.get(i).x, (int)points.get(i).y, 0, isRed);
             i = 0;
             points.remove(0);
         }
@@ -391,8 +533,13 @@ public class GameWindowClient implements Screen {
         for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
             for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++) {
                 if(fieldGrid[i][j] == 0)
-                    fieldGrid[i][j] = 12;
-                if(fieldGrid[i][j] == 17)
+                    if(isRed)
+                        fieldGrid[i][j] = 12;
+                    else
+                        fieldGrid[i][j] = 2;
+                if(fieldGrid[i][j] == 17 && isRed)
+                    fieldGrid[i][j] = 0;
+                if(fieldGrid[i][j] == 7 && !isRed)
                     fieldGrid[i][j] = 0;
             }
         }

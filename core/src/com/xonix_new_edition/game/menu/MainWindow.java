@@ -77,9 +77,6 @@ public class MainWindow implements Screen {
                     outputStream = new ObjectOutputStream(socket.getOutputStream());
                     inputStream = new ObjectInputStream(socket.getInputStream());
 
-                    //String message = "Hello, World!";
-                    //outputStream.write(message.getBytes());
-                    outputStream.flush();
                     xonixNewEdition.setScreen(new GameWindowClient(xonixNewEdition, mainWindowNickname, socket));
                 } catch (IOException e) {
                     xonixNewEdition.setScreen(new ErrorWindow(xonixNewEdition, mainWindowNickname, false));
