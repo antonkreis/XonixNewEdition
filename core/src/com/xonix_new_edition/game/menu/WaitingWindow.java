@@ -95,14 +95,14 @@ public class WaitingWindow implements Screen {
                 outputStream = new ObjectOutputStream(socket.getOutputStream());
                 inputStream = new ObjectInputStream(socket.getInputStream());
 
-                byte[] buffer = new byte[20];
-                readBytes = inputStream.read(buffer);
-                String result = new String(buffer, 0, readBytes);
-                System.out.println(result);
+                //byte[] buffer = new byte[20];
+                //readBytes = inputStream.read(buffer);
+                //String result = new String(buffer, 0, readBytes);
+                //System.out.println(result);
 
-                serverSocket.close();
+                //serverSocket.close();
 
-                xonixNewEdition.setScreen(new GameWindow(xonixNewEdition, timeout, areaToWin, nickname));
+                xonixNewEdition.setScreen(new GameWindow(xonixNewEdition, timeout, areaToWin, nickname, serverSocket, socket));
 
             } catch (IOException exception1) {
                 try{

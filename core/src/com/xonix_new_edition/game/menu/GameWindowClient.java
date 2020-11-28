@@ -13,13 +13,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.xonix_new_edition.game.XonixNewEdition;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream; //Source: Internet
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class GameWindow implements Screen {
+public class GameWindowClient implements Screen {
     private final int FIELD_CELL_SIZE = 5;
     private final int FIELD_OFFSET = 15;
 
@@ -34,7 +35,7 @@ public class GameWindow implements Screen {
     RedBall redBall;
     ShapeRenderer shapeRenderer;
     int amountOfLines;
-    BlueBall.BlueBallDirection currentDirection;
+    RedBall.RedBallDirection currentDirection;
 
     boolean captureBegin;
     ArrayList<Vector2> points;
@@ -45,7 +46,8 @@ public class GameWindow implements Screen {
     BitmapFont textFont;
     String blueBallScore;
     String redBallScore;
-    String scoreLabel;
+    String blueBallScoreLabel;
+    String redBallScoreLabel;
     String timeLabel;
     String time;
     String nickname;
@@ -64,19 +66,13 @@ public class GameWindow implements Screen {
     private static ObjectInputStream inputStream;
     private static int readBytes;
 
-    byte[] configurationOutputSequence;
     byte[] configurationInputSequence;
+    byte[] configurationOutputSequence;
 
-    GameWindow(final XonixNewEdition xonixNewEdition, String timeout,
-               String areaToWin, final String nickname, final ServerSocket serverSocket, final Socket socket){
+    GameWindowClient(final XonixNewEdition xonixNewEdition, final String nickname, final Socket socket){
         this.xonixNewEdition = xonixNewEdition;
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
-
-        this.areaToWin = Integer.parseInt(areaToWin.substring(0,2));
-        this.timeout = timeout;
-        this.timeoutInt = Integer.parseInt(timeout.substring(0, 1));
-        this.nickname = nickname;
 
         batch = new SpriteBatch();
         background = new Texture("background_game_window_old.png");
@@ -92,7 +88,6 @@ public class GameWindow implements Screen {
                 xonixNewEdition.setScreen(new MainWindow(xonixNewEdition, nickname));
                 try {
                     socket.close();
-                    serverSocket.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -102,10 +97,10 @@ public class GameWindow implements Screen {
 
         Gdx.gl.glLineWidth(5);
         shapeRenderer = new ShapeRenderer();
-        shapeRenderer.setColor(Color.BLUE);
+        shapeRenderer.setColor(Color.RED);
 
         amountOfLines = 1;
-        currentDirection = BlueBall.BlueBallDirection.DEFAULT;
+        currentDirection = RedBall.RedBallDirection.DEFAULT;
 
         fieldGrid = new int[980 / FIELD_CELL_SIZE][690 / FIELD_CELL_SIZE];
         for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
@@ -138,46 +133,50 @@ public class GameWindow implements Screen {
 
         blueBallScore = "0.0 %";
         redBallScore = "0.0 %";
-        scoreLabel = "Score:";
-
-        timeLabel = "Time:";
-        time = timeout.substring(0, 1) + ".00";
-        minutes = Integer.parseInt(timeout.substring(0, 1));
-        seconds = 0;
+        blueBallScoreLabel = "Score:";
+        redBallScoreLabel = "Score:";
 
         textFont = new BitmapFont(Gdx.files.internal("font2.fnt"));
 
-        configurationOutputSequence = new byte[14];
-        configurationInputSequence = new byte[12];
+        configurationInputSequence = new byte[14];
+        configurationOutputSequence = new byte[12];
 
-        configurationOutputSequence[12] = (byte)this.areaToWin;
-        configurationOutputSequence[13] = (byte)minutes;
-
-        byte[] nicknameTemp = nickname.getBytes();
-
-        for(int i = 0; i < nickname.length(); i++){
-            configurationOutputSequence[i] = nicknameTemp[i];
-        }
+        configurationOutputSequence = nickname.getBytes();
 
         try {
             outputStream = new ObjectOutputStream(socket.getOutputStream());
             inputStream = new ObjectInputStream(socket.getInputStream());
 
+            inputStream.read(configurationInputSequence);
+
             outputStream.write(configurationOutputSequence);
             outputStream.flush();
-
-            inputStream.read(configurationInputSequence);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        areaToWin = configurationInputSequence[12];
+        timeoutInt = configurationInputSequence[13];
+        this.nickname = nickname;
         String partnerNicknameTemp = new String(configurationInputSequence);
-//        if(partnerNicknameTemp.length() > 12)
-//            partnerNicknameTemp = partnerNicknameTemp.substring(0, 12);
+        if(partnerNicknameTemp.length() > 12)
+            partnerNicknameTemp = partnerNicknameTemp.substring(0, 12);
         if(partnerNicknameTemp.contains("\0"))
             partnerNicknameTemp = partnerNicknameTemp.substring(0, partnerNicknameTemp.indexOf("\0"));
 
         partnerNickname = partnerNicknameTemp;
+
+        timeLabel = "Time:";
+        time =  timeoutInt + ".00";
+        minutes = timeoutInt;
+        seconds = 0;
+
+        try {
+            outputStream.write(configurationOutputSequence);
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -189,8 +188,6 @@ public class GameWindow implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-
 
         //fieldGrid[((int)redBall.getPosition().x + 15) / 5][(659 - (int)redBall.getPosition().y + 15) / 5] = 2;
 
@@ -211,6 +208,16 @@ public class GameWindow implements Screen {
                     fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
                             FIELD_CELL_SIZE, FIELD_CELL_SIZE);
                 }
+                else if(fieldGrid[i][j] == 11){
+                    fieldPixmap.setColor(Color.RED);
+                    fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
+                            FIELD_CELL_SIZE, FIELD_CELL_SIZE);
+                }
+                else if(fieldGrid[i][j] == 12){
+                    fieldPixmap.setColor(Color.RED);
+                    fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
+                            FIELD_CELL_SIZE, FIELD_CELL_SIZE);
+                }
                 else{
                     fieldPixmap.setColor(Color.WHITE);
                     fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
@@ -221,19 +228,19 @@ public class GameWindow implements Screen {
 
         fieldTexture.draw(fieldPixmap, 0, 0);
 
-        currentDirection = blueBall.getDirection();
-        blueBall.update();
+        currentDirection = redBall.getDirection();
+        redBall.update();
 
         batch.begin();
         batch.draw(background, 0, 0);
         batch.draw(fieldTexture, 0, 0);
         textFont.setColor(Color.BLACK);
-        textFont.draw(batch, scoreLabel, 1020, 700);
+        textFont.draw(batch, blueBallScoreLabel, 1020, 700);
         textFont.setColor(Color.BLUE);
-        textFont.draw(batch, nickname + ":", 1020, 650);
+        textFont.draw(batch, partnerNickname + ":", 1020, 650);
         textFont.draw(batch, blueBallScore, 1090, 600);
         textFont.setColor(Color.RED);
-        textFont.draw(batch, partnerNickname + ":", 1020, 550);
+        textFont.draw(batch, nickname + ":", 1020, 550);
         textFont.draw(batch, redBallScore, 1090, 500);
         textFont.setColor(Color.BLACK);
         textFont.draw(batch, timeLabel, 1020, 450);
@@ -262,57 +269,57 @@ public class GameWindow implements Screen {
     }
 
     public void update(){
-        Vector2 blueBallPosition = blueBall.getPosition();
-        float blueCellsCounter = 0;
+        Vector2 redBallPosition = redBall.getPosition();
+        float redCellsCounter = 0;
         int seaAreaMaxSize = (980 / FIELD_CELL_SIZE - 7 - 7) * (690 / FIELD_CELL_SIZE - 7 - 7);
         Float capturedAreaPercent;
 
-        if(fieldGrid[((int)blueBallPosition.x + 15) / 5][(659 - (int)blueBallPosition.y + 15) / 5] == 1){
+        if(fieldGrid[((int)redBallPosition.x + 15) / 5][(659 - (int)redBallPosition.y + 15) / 5] == 11){
             captureBegin = false;
-            //System.out.println("blu");
             for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
                 for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
-                    if(fieldGrid[i][j] == 1)
+                    if(fieldGrid[i][j] == 11)
                         fieldGrid[i][j] = 0;
                 }
             }
         }
 
-        if(fieldGrid[((int)blueBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - 15) / FIELD_CELL_SIZE] != 3
-                && fieldGrid[((int)blueBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - 15) / FIELD_CELL_SIZE] != 2){
-            fieldGrid[((int)blueBallPosition.x + 15) / 5][(689 - (int)blueBallPosition.y - 15) / 5] = 1;
+        if(fieldGrid[((int)redBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)redBallPosition.y - 15) / FIELD_CELL_SIZE] != 3
+                && fieldGrid[((int)redBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)redBallPosition.y - 15) / FIELD_CELL_SIZE] != 12){
+            fieldGrid[((int)redBallPosition.x + 15) / 5][(689 - (int)redBallPosition.y - 15) / 5] = 11;
             captureBegin = true;
         }
 
         else{
-
             if(captureBegin){
-                blueBall.setDefaultDirection();
-                fieldFill(((int)(redBall.getPosition().x - 15) / FIELD_CELL_SIZE),
-                        (int)((689 - redBall.getPosition().y - 15) / FIELD_CELL_SIZE));
+                redBall.setDefaultDirection();
+                if(fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 3
+                        && fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 12)
+                    fieldFill(((int)(redBall.getPosition().x - 15) / FIELD_CELL_SIZE),
+                            (int)((689 - redBall.getPosition().y - 15) / FIELD_CELL_SIZE));
             }
 
             captureBegin = false;
 
             for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
                 for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
-                    if(fieldGrid[i][j] == 1)
-                        fieldGrid[i][j] = 2;
-                    if(fieldGrid[i][j] == 2)
-                        blueCellsCounter++;
+                    if(fieldGrid[i][j] == 11)
+                        fieldGrid[i][j] = 12;
+                    if(fieldGrid[i][j] == 12)
+                        redCellsCounter++;
                 }
             }
 
-            capturedAreaPercent = blueCellsCounter / seaAreaMaxSize * 100;
+            capturedAreaPercent = redCellsCounter / seaAreaMaxSize * 100;
 
-            blueBallScore = capturedAreaPercent.toString().
+            redBallScore = capturedAreaPercent.toString().
                     substring(0, capturedAreaPercent.toString().indexOf(".") + 2) + " %";
 
             if(capturedAreaPercent >= areaToWin || (minutes == 0 && seconds == 0))
                 if(seconds < 10 && seconds >= 0)
                     xonixNewEdition.setScreen(new StatisticsWindow(xonixNewEdition,
-                        capturedAreaPercent.toString().substring(0,
-                                capturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":0" + seconds, nickname, " "));
+                            capturedAreaPercent.toString().substring(0,
+                                    capturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":0" + seconds, nickname, " "));
                 else
                     xonixNewEdition.setScreen(new StatisticsWindow(xonixNewEdition,
                             capturedAreaPercent.toString().substring(0,
@@ -349,44 +356,15 @@ public class GameWindow implements Screen {
         shapeRenderer.dispose();
     }
 
-//    private boolean iter(int x, int y, int depth){ // Idea from YouTube https://www.youtube.com/watch?v=_5W5sYjDBnA
-//        boolean ret1 = true, ret2 = true, ret3 = true, ret4 = true;
-//
-//        fieldGrid[x][y] = 7;
-//
-//        if(depth == 10){
-//            points.add(new Vector2(x, y));
-//            return false;
-//        }
-//
-//        if(fieldGrid[x - 1][y] == 0){
-//            ret1 = iter(x - 1, y, depth + 1);
-//        }
-//
-//        if(fieldGrid[x + 1][y] == 0){
-//            ret2 = iter(x + 1, y, depth + 1);
-//        }
-//
-//        if(fieldGrid[x][y - 1] == 0){
-//            ret3 = iter(x, y - 1, depth + 1);
-//        }
-//
-//        if(fieldGrid[x][y + 1] == 0){
-//            ret4 = iter(x, y + 1, depth + 1);
-//        }
-//
-//        return ret1 && ret2 && ret3 && ret4;
-//    }
-
     private void fieldFillIteration(int x, int y, int depth){ // Idea from YouTube https://www.youtube.com/watch?v=_5W5sYjDBnA
-                                                              // and https://lodev.org/cgtutor/floodfill.html#Introduction_
+        // and https://lodev.org/cgtutor/floodfill.html#Introduction_
         if(depth == 10){
             points.add(new Vector2(x, y));
             return;
         }
 
         if(fieldGrid[x][y] == 0){
-            fieldGrid[x][y] = 7;
+            fieldGrid[x][y] = 17;
 
             fieldFillIteration(x - 1, y, depth + 1);
             fieldFillIteration(x + 1, y, depth + 1);
@@ -396,7 +374,7 @@ public class GameWindow implements Screen {
     }
 
     private void fieldFill(int x, int y) { // Idea from YouTube https://www.youtube.com/watch?v=_5W5sYjDBnA
-                                           // and https://lodev.org/cgtutor/floodfill.html#Introduction_
+        // and https://lodev.org/cgtutor/floodfill.html#Introduction_
         //System.out.println(points.size());
         //fieldGrid[x][y] = 2;
         points.add(new Vector2(x, y));
@@ -413,8 +391,8 @@ public class GameWindow implements Screen {
         for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
             for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++) {
                 if(fieldGrid[i][j] == 0)
-                    fieldGrid[i][j] = 2;
-                if(fieldGrid[i][j] == 7)
+                    fieldGrid[i][j] = 12;
+                if(fieldGrid[i][j] == 17)
                     fieldGrid[i][j] = 0;
             }
         }

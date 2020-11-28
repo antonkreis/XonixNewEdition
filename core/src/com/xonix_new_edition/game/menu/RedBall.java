@@ -24,7 +24,7 @@ public class RedBall {
     RedBall(int speed){
         this.speed = speed;
         texture = new Texture("red_ball1.png");
-        position = new Vector2(500, 400);
+        position = new Vector2(935, 645);
         direction = RedBallDirection.DEFAULT;
     }
 
@@ -49,7 +49,50 @@ public class RedBall {
     }
 
     public void update(){
-
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
+            if(position.x <= 10)
+                return;
+            direction = RedBall.RedBallDirection.LEFT;
+            position.x -= speed;
+        }
+        else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
+            if(position.x >= 935)
+                return;
+            direction = RedBall.RedBallDirection.RIGHT;
+            position.x += speed;
+        }
+        else if(Gdx.input.isKeyPressed(Input.Keys.UP)){
+            if(position.y >= 645)
+                return;
+            direction = RedBall.RedBallDirection.UP;
+            position.y += speed;
+        }
+        else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
+            if(position.y <= 10)
+                return;
+            direction = RedBall.RedBallDirection.DOWN;
+            position.y -= speed;
+        }
+        else if(direction == RedBall.RedBallDirection.LEFT){
+            if(position.x <= 10)
+                return;
+            position.x -= speed;
+        }
+        else if(direction == RedBall.RedBallDirection.RIGHT){
+            if(position.x >= 935)
+                return;
+            position.x += speed;
+        }
+        else if(direction == RedBall.RedBallDirection.UP){
+            if(position.y >= 645)
+                return;
+            position.y += speed;
+        }
+        else if(direction == RedBall.RedBallDirection.DOWN){
+            if(position.y <= 10)
+                return;
+            position.y -= speed;
+        }
     }
 }
 
