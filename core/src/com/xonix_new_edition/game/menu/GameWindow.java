@@ -313,25 +313,10 @@ public class GameWindow implements Screen {
                 for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
                     if(fieldGrid[i][j] == 11)
                         fieldGrid[i][j] = 12;
-                    if(fieldGrid[i][j] == 12)
-                        redCellsCounter++;
+//                    if(fieldGrid[i][j] == 12)
+//                        redCellsCounter++;
                 }
             }
-
-            redCapturedAreaPercent = redCellsCounter / seaAreaMaxSize * 100;
-
-            redBallScore = redCapturedAreaPercent.toString().
-                    substring(0, redCapturedAreaPercent.toString().indexOf(".") + 2) + " %";
-
-            if(redCapturedAreaPercent >= areaToWin || (minutes == 0 && seconds == 0))
-                if(seconds < 10 && seconds >= 0)
-                    xonixNewEdition.setScreen(new StatisticsWindow(xonixNewEdition,
-                            redCapturedAreaPercent.toString().substring(0,
-                                    redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":0" + seconds, nicknameRed, nicknameBlue, false));
-                else
-                    xonixNewEdition.setScreen(new StatisticsWindow(xonixNewEdition,
-                            redCapturedAreaPercent.toString().substring(0,
-                                    redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":" + seconds, nicknameRed, nicknameBlue, false));
         }
 
         if(fieldGrid[((int)blueBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - 15) / FIELD_CELL_SIZE] != 3
@@ -355,29 +340,59 @@ public class GameWindow implements Screen {
                 for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
                     if(fieldGrid[i][j] == 1)
                         fieldGrid[i][j] = 2;
-                    if(fieldGrid[i][j] == 2)
-                        blueCellsCounter++;
+//                    if(fieldGrid[i][j] == 2)
+//                        blueCellsCounter++;
                 }
             }
-
-            redCapturedAreaPercent = redCellsCounter / seaAreaMaxSize * 100;
-            blueCapturedAreaPercent = blueCellsCounter / seaAreaMaxSize * 100;
-
-            redBallScore = redCapturedAreaPercent.toString().
-                    substring(0, redCapturedAreaPercent.toString().indexOf(".") + 2) + " %";
-            blueBallScore = blueCapturedAreaPercent.toString().
-                    substring(0, blueCapturedAreaPercent.toString().indexOf(".") + 2) + " %";
-
-            if(blueCapturedAreaPercent >= areaToWin || (minutes == 0 && seconds == 0))
-                if(seconds < 10 && seconds >= 0)
-                    xonixNewEdition.setScreen(new StatisticsWindow(xonixNewEdition,
-                            redCapturedAreaPercent.toString().substring(0,
-                                    redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":0" + seconds, nicknameBlue, nicknameRed, true));
-                else
-                    xonixNewEdition.setScreen(new StatisticsWindow(xonixNewEdition,
-                            redCapturedAreaPercent.toString().substring(0,
-                                    redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":" + seconds, nicknameBlue, nicknameRed, true));
         }
+
+        for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
+            for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
+                if(fieldGrid[i][j] == 2)
+                    blueCellsCounter++;
+                if(fieldGrid[i][j] == 12)
+                    redCellsCounter++;
+            }
+        }
+
+        redCapturedAreaPercent = redCellsCounter / seaAreaMaxSize * 100;
+        blueCapturedAreaPercent = blueCellsCounter / seaAreaMaxSize * 100;
+
+        redBallScore = redCapturedAreaPercent.toString().
+                substring(0, redCapturedAreaPercent.toString().indexOf(".") + 2) + " %";
+        blueBallScore = blueCapturedAreaPercent.toString().
+                substring(0, blueCapturedAreaPercent.toString().indexOf(".") + 2) + " %";
+
+        if(redCapturedAreaPercent >= areaToWin)
+            if(seconds < 10 && seconds >= 0)
+                xonixNewEdition.setScreen(new StatisticsWindow(xonixNewEdition,
+                        redCapturedAreaPercent.toString().substring(0, redCapturedAreaPercent.toString().indexOf(".") + 2) + " %",  blueCapturedAreaPercent.toString().substring(0,
+                        blueCapturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":0" + seconds, nicknameRed, nicknameBlue, false));
+            else
+                xonixNewEdition.setScreen(new StatisticsWindow(xonixNewEdition,
+                        redCapturedAreaPercent.toString().substring(0, redCapturedAreaPercent.toString().indexOf(".") + 2) + " %",
+                        blueCapturedAreaPercent.toString().substring(0, blueCapturedAreaPercent.toString().indexOf(".") + 2) + " %",
+                        minutes + ":" + seconds, nicknameRed, nicknameBlue, false));
+
+
+
+        if(blueCapturedAreaPercent >= areaToWin)
+            if(seconds < 10 && seconds >= 0)
+                xonixNewEdition.setScreen(new StatisticsWindow(xonixNewEdition, blueCapturedAreaPercent.toString().substring(0,
+                        blueCapturedAreaPercent.toString().indexOf(".") + 2) + " %",
+                        redCapturedAreaPercent.toString().substring(0,
+                                redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":0" + seconds, nicknameBlue, nicknameRed, true));
+            else
+                xonixNewEdition.setScreen(new StatisticsWindow(xonixNewEdition, blueCapturedAreaPercent.toString().substring(0,
+                        blueCapturedAreaPercent.toString().indexOf(".") + 2) + " %",
+                        redCapturedAreaPercent.toString().substring(0,
+                                redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":" + seconds, nicknameBlue, nicknameRed, true));
+
+        if(minutes == 0 && seconds == 0)
+        xonixNewEdition.setScreen(new StatisticsWindow(xonixNewEdition,
+                redCapturedAreaPercent.toString().substring(0,
+                        redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", redCapturedAreaPercent.toString().substring(0,
+                redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":" + seconds, nicknameBlue, nicknameRed, true));
     }
 
     @Override
