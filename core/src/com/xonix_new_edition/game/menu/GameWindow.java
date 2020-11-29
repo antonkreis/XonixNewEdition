@@ -12,11 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.xonix_new_edition.game.XonixNewEdition;
 
-import java.io.IOException;
-import java.io.ObjectInputStream; //Source: Internet
-import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.ArrayList;
 
 public class GameWindow implements Screen {
@@ -62,12 +57,6 @@ public class GameWindow implements Screen {
     int minutes;
     int seconds;
 
-    private static ServerSocket serverSocket; //Source: Internet
-    private static Socket socket;
-    private static ObjectOutputStream outputStream;
-    private static ObjectInputStream inputStream;
-    private static int readBytes;
-
     byte[] configurationOutputSequence;
     byte[] configurationInputSequence;
     byte[] gameStatusInputSequence;
@@ -79,7 +68,7 @@ public class GameWindow implements Screen {
     int redBallPositionY;
 
     GameWindow(final XonixNewEdition xonixNewEdition, String timeout,
-               String areaToWin, final String nickname, final ServerSocket serverSocket, final Socket socket){
+               String areaToWin, final String nickname){
         this.xonixNewEdition = xonixNewEdition;
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
@@ -101,12 +90,6 @@ public class GameWindow implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 System.out.println("leaveButton");
                 xonixNewEdition.setScreen(new MainWindow(xonixNewEdition, nickname));
-                try {
-                    socket.close();
-                    serverSocket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
         });
         stage.addActor(leaveButton.textButton);
@@ -160,41 +143,6 @@ public class GameWindow implements Screen {
         seconds = 0;
 
         textFont = new BitmapFont(Gdx.files.internal("font2.fnt"));
-
-        configurationOutputSequence = new byte[14];
-        configurationInputSequence = new byte[12];
-
-        configurationOutputSequence[12] = (byte)this.areaToWin;
-        configurationOutputSequence[13] = (byte)minutes;
-
-        byte[] nicknameTemp = nickname.getBytes();
-
-        for(int i = 0; i < nickname.length(); i++){
-            configurationOutputSequence[i] = nicknameTemp[i];
-        }
-
-        try {
-            outputStream = new ObjectOutputStream(socket.getOutputStream());
-            inputStream = new ObjectInputStream(socket.getInputStream());
-
-            outputStream.write(configurationOutputSequence);
-            outputStream.flush();
-
-            inputStream.read(configurationInputSequence);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String partnerNicknameTemp = new String(configurationInputSequence);
-//        if(partnerNicknameTemp.length() > 12)
-//            partnerNicknameTemp = partnerNicknameTemp.substring(0, 12);
-        if(partnerNicknameTemp.contains("\0"))
-            partnerNicknameTemp = partnerNicknameTemp.substring(0, partnerNicknameTemp.indexOf("\0"));
-
-        partnerNickname = partnerNicknameTemp;
-
-        gameStatusInputSequence = new byte[5];
-        gameStatusOutputSequence = new byte[5];
     }
 
     @Override
@@ -248,6 +196,7 @@ public class GameWindow implements Screen {
 
         currentDirection = blueBall.getDirection();
         blueBall.update();
+        redBall.update();
 
         batch.begin();
         batch.draw(background, 0, 0);
@@ -287,57 +236,6 @@ public class GameWindow implements Screen {
     }
 
     public void update(){
-        try {
-            inputStream.read(gameStatusInputSequence);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        redBallPositionX = 0;
-        redBallPositionY = 0;
-
-        for (int i = 0; i < 8; i++){
-            if ((gameStatusInputSequence[0] & (1 << i)) != 0)
-                redBallPositionX |= (1 << (i + 8));
-            if ((gameStatusInputSequence[1] & (1 << i)) != 0)
-                redBallPositionX |= (1 << (i ));
-            if ((gameStatusInputSequence[2] & (1 << i)) != 0)
-                redBallPositionY |= (1 << (i + 8));
-            if ((gameStatusInputSequence[3] & (1 << i)) != 0)
-                redBallPositionY |= (1 << (i ));
-        }
-
-        redBall.setPosition(redBallPositionX, redBallPositionY);
-        System.out.println(redBallPositionX);
-        System.out.println(redBallPositionY);
-
-        blueBallPositionX = (int)blueBall.getPosition().x;
-        blueBallPositionY = (int)blueBall.getPosition().y;
-
-
-        for(int i = 0; i < 5; i++){
-            gameStatusOutputSequence[i] = 0;
-        }
-
-        for (int i = 0; i < 8; i++){
-            if ((blueBallPositionX & (1 << (i + 8))) != 0)
-                gameStatusOutputSequence[0] |= (1 << i);
-            if ((blueBallPositionX & (1 << i)) != 0)
-                gameStatusOutputSequence[1] |= (1 << i);
-
-            if ((blueBallPositionY & (1 << (i + 8))) != 0)
-                gameStatusOutputSequence[2] |= (1 << i);
-            if ((blueBallPositionY & (1 << i)) != 0)
-                gameStatusOutputSequence[3] |= (1 << i);
-        }
-
-        try {
-            outputStream.write(gameStatusOutputSequence);
-            outputStream.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         Vector2 redBallPosition = redBall.getPosition();
         Vector2 blueBallPosition = blueBall.getPosition();
         float redCellsCounter = 0;

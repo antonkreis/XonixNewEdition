@@ -53,7 +53,7 @@ public class ConfigurationWindow implements Screen {
         startButton.textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                xonixNewEdition.setScreen(new WaitingWindow(xonixNewEdition, timeout, areaToWin, nickname));
+                xonixNewEdition.setScreen(new GameWindow(xonixNewEdition, timeout, areaToWin, nickname));
             }
         });
         stage.addActor(startButton.textButton);

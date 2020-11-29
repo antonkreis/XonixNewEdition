@@ -54,25 +54,25 @@ public class RedBall {
     }
 
     public void update(){
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
+        if(Gdx.input.isKeyPressed(Input.Keys.A)){
             if(position.x <= 10)
                 return;
             direction = RedBall.RedBallDirection.LEFT;
             position.x -= speed;
         }
-        else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
+        else if(Gdx.input.isKeyPressed(Input.Keys.D)){
             if(position.x >= 935)
                 return;
             direction = RedBall.RedBallDirection.RIGHT;
             position.x += speed;
         }
-        else if(Gdx.input.isKeyPressed(Input.Keys.UP)){
+        else if(Gdx.input.isKeyPressed(Input.Keys.W)){
             if(position.y >= 645)
                 return;
             direction = RedBall.RedBallDirection.UP;
             position.y += speed;
         }
-        else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
+        else if(Gdx.input.isKeyPressed(Input.Keys.S)){
             if(position.y <= 10)
                 return;
             direction = RedBall.RedBallDirection.DOWN;
