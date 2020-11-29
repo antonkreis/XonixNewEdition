@@ -27,9 +27,10 @@ public class GameWindow implements Screen {
     OrthographicCamera camera;
     BlueBall blueBall;
     RedBall redBall;
+    EnemyBall enemyBall;
     ShapeRenderer shapeRenderer;
-    int amountOfLines;
-    BlueBall.BlueBallDirection currentDirection;
+    //int amountOfLines;
+    //BlueBall.BlueBallDirection currentDirection;
 
     boolean blueCaptureBegin;
     boolean redCaptureBegin;
@@ -57,16 +58,6 @@ public class GameWindow implements Screen {
     int minutes;
     int seconds;
 
-    byte[] configurationOutputSequence;
-    byte[] configurationInputSequence;
-    byte[] gameStatusInputSequence;
-    byte[] gameStatusOutputSequence;
-
-    int blueBallPositionX;
-    int blueBallPositionY;
-    int redBallPositionX;
-    int redBallPositionY;
-
     GameWindow(final XonixNewEdition xonixNewEdition, String timeout,
                String areaToWin, final String nicknameBlue, final String nickNameRed){
         this.xonixNewEdition = xonixNewEdition;
@@ -85,6 +76,8 @@ public class GameWindow implements Screen {
         camera.setToOrtho(false, 1280, 720);
         blueBall = new BlueBall(5);
         redBall = new RedBall(5);
+        enemyBall = new EnemyBall(5);
+        enemyBall.setRandomDirection();
         leaveButton = new Button(xonixNewEdition, "leave_button.png", "leave_button.png", 1070, 20);
         leaveButton.textButton.addListener(new ChangeListener() {
             @Override
@@ -99,8 +92,8 @@ public class GameWindow implements Screen {
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setColor(Color.BLUE);
 
-        amountOfLines = 1;
-        currentDirection = BlueBall.BlueBallDirection.DEFAULT;
+        //amountOfLines = 1;
+        //currentDirection = BlueBall.BlueBallDirection.DEFAULT;
 
         fieldGrid = new int[980 / FIELD_CELL_SIZE][690 / FIELD_CELL_SIZE];
         for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
@@ -175,6 +168,11 @@ public class GameWindow implements Screen {
                     fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
                             FIELD_CELL_SIZE, FIELD_CELL_SIZE);
                 }
+                else if(fieldGrid[i][j] == 30){
+                    fieldPixmap.setColor(Color.YELLOW);
+                    fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
+                            FIELD_CELL_SIZE, FIELD_CELL_SIZE);
+                }
                 else if(fieldGrid[i][j] == 11){
                     fieldPixmap.setColor(Color.RED);
                     fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
@@ -195,9 +193,10 @@ public class GameWindow implements Screen {
 
         fieldTexture.draw(fieldPixmap, 0, 0);
 
-        currentDirection = blueBall.getDirection();
+        //currentDirection = blueBall.getDirection();
         blueBall.update();
         redBall.update();
+        enemyBall.update();
 
         batch.begin();
         batch.draw(background, 0, 0);
@@ -218,6 +217,7 @@ public class GameWindow implements Screen {
             textFont.draw(batch, minutes + ":" + seconds, 1090, 400);
         blueBall.render(batch);
         redBall.render(batch);
+        enemyBall.render(batch);
         batch.end();
         stage.draw();
         update();
@@ -393,6 +393,25 @@ public class GameWindow implements Screen {
                 redCapturedAreaPercent.toString().substring(0,
                         redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", redCapturedAreaPercent.toString().substring(0,
                 redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":" + seconds, nicknameBlue, nicknameRed, true));
+
+
+        if(fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
+                || fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
+                || fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
+                || fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
+                || fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
+                || fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2){
+            enemyBall.setNewDirectionVertical();
+        }
+        if(fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 3
+                || fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 12
+                || fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 2
+                || fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 3
+                || fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 12
+                || fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 2){
+            enemyBall.setNewDirectionHorizontal();
+        }
+        //fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] = 30;
     }
 
     @Override
