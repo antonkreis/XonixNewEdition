@@ -7,7 +7,7 @@ public class XonixNewEdition extends Game {
 
 	@Override
 	public void create () {
-		setScreen(new MainWindow(this, "Player"));
+		setScreen(new MainWindow(this, "Player", "Player"));
 	}
 
 	@Override

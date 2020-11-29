@@ -47,8 +47,8 @@ public class GameWindow implements Screen {
     String scoreLabel;
     String timeLabel;
     String time;
-    String nickname;
-    String partnerNickname;
+    String nicknameBlue;
+    String nicknameRed;
 
     String timeout;
     int timeoutInt;
@@ -68,7 +68,7 @@ public class GameWindow implements Screen {
     int redBallPositionY;
 
     GameWindow(final XonixNewEdition xonixNewEdition, String timeout,
-               String areaToWin, final String nickname){
+               String areaToWin, final String nicknameBlue, final String nickNameRed){
         this.xonixNewEdition = xonixNewEdition;
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
@@ -76,7 +76,8 @@ public class GameWindow implements Screen {
         this.areaToWin = Integer.parseInt(areaToWin.substring(0,2));
         this.timeout = timeout;
         this.timeoutInt = Integer.parseInt(timeout.substring(0, 1));
-        this.nickname = nickname;
+        this.nicknameBlue = nicknameBlue;
+        this.nicknameRed = nickNameRed;
 
         batch = new SpriteBatch();
         background = new Texture("background_game_window_old.png");
@@ -89,7 +90,7 @@ public class GameWindow implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 System.out.println("leaveButton");
-                xonixNewEdition.setScreen(new MainWindow(xonixNewEdition, nickname));
+                xonixNewEdition.setScreen(new MainWindow(xonixNewEdition, nicknameBlue, nicknameRed));
             }
         });
         stage.addActor(leaveButton.textButton);
@@ -204,10 +205,10 @@ public class GameWindow implements Screen {
         textFont.setColor(Color.BLACK);
         textFont.draw(batch, scoreLabel, 1020, 700);
         textFont.setColor(Color.BLUE);
-        textFont.draw(batch, nickname + ":", 1020, 650);
+        textFont.draw(batch, nicknameBlue + ":", 1020, 650);
         textFont.draw(batch, blueBallScore, 1090, 600);
         textFont.setColor(Color.RED);
-        textFont.draw(batch, partnerNickname + ":", 1020, 550);
+        textFont.draw(batch, nicknameRed + ":", 1020, 550);
         textFont.draw(batch, redBallScore, 1090, 500);
         textFont.setColor(Color.BLACK);
         textFont.draw(batch, timeLabel, 1020, 450);
@@ -326,11 +327,11 @@ public class GameWindow implements Screen {
                 if(seconds < 10 && seconds >= 0)
                     xonixNewEdition.setScreen(new StatisticsWindow(xonixNewEdition,
                             redCapturedAreaPercent.toString().substring(0,
-                                    redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":0" + seconds, nickname, " "));
+                                    redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":0" + seconds, nicknameRed, nicknameBlue, false));
                 else
                     xonixNewEdition.setScreen(new StatisticsWindow(xonixNewEdition,
                             redCapturedAreaPercent.toString().substring(0,
-                                    redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":" + seconds, nickname, " "));
+                                    redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":" + seconds, nicknameRed, nicknameBlue, false));
         }
 
         if(fieldGrid[((int)blueBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - 15) / FIELD_CELL_SIZE] != 3
@@ -371,11 +372,11 @@ public class GameWindow implements Screen {
                 if(seconds < 10 && seconds >= 0)
                     xonixNewEdition.setScreen(new StatisticsWindow(xonixNewEdition,
                             redCapturedAreaPercent.toString().substring(0,
-                                    redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":0" + seconds, nickname, " "));
+                                    redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":0" + seconds, nicknameBlue, nicknameRed, true));
                 else
                     xonixNewEdition.setScreen(new StatisticsWindow(xonixNewEdition,
                             redCapturedAreaPercent.toString().substring(0,
-                                    redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":" + seconds, nickname, " "));
+                                    redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":" + seconds, nicknameBlue, nicknameRed, true));
         }
     }
 

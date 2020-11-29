@@ -31,16 +31,16 @@ public class MainWindow implements Screen {
     int nicknameLengthRed;
 
 
-    public MainWindow(final XonixNewEdition xonixNewEdition, final String nickname){
-        this.mainWindowNicknameBlue = nickname;
-        this.mainWindowNicknameRed = nickname;
+    public MainWindow(final XonixNewEdition xonixNewEdition, final String nicknameBlue, final String nicknameRed){
+        this.mainWindowNicknameBlue = nicknameBlue;
+        this.mainWindowNicknameRed = nicknameRed;
         this.xonixNewEdition = xonixNewEdition;
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
         nicknameTextFont = new BitmapFont(Gdx.files.internal("font2.fnt"));
-        nicknameLengthBlue = nickname.length();
-        nicknameLengthRed = nickname.length();
+        nicknameLengthBlue = nicknameBlue.length();
+        nicknameLengthRed = nicknameBlue.length();
 
         batch = new SpriteBatch();
 
@@ -49,7 +49,7 @@ public class MainWindow implements Screen {
         joinButton.textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                xonixNewEdition.setScreen(new ConfigurationWindow(xonixNewEdition, mainWindowNicknameBlue));
+                xonixNewEdition.setScreen(new ConfigurationWindow(xonixNewEdition, mainWindowNicknameBlue, mainWindowNicknameRed));
             }
         });
         stage.addActor(joinButton.textButton);

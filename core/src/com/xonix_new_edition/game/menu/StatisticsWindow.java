@@ -28,9 +28,11 @@ public class StatisticsWindow implements Screen {
     String timeSpentLabel;
     String winnerNickname;
     String place2Nickname;
+    boolean isBlueNicknameWinner;
 
-    StatisticsWindow(final XonixNewEdition xonixNewEdition,
-                     String capturedAreaPercent, String timeout, final String winnerNickname, String place2Nickname){
+    StatisticsWindow(final XonixNewEdition xonixNewEdition, String capturedAreaPercent,
+                     String timeout, final String winnerNickname,
+                     final String place2Nickname, boolean isBlueNicknameWinner){
         this.xonixNewEdition = xonixNewEdition;
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
@@ -38,6 +40,7 @@ public class StatisticsWindow implements Screen {
         this.timeout = timeout;
         this.winnerNickname = winnerNickname;
         this.place2Nickname = place2Nickname;
+        this.isBlueNicknameWinner = isBlueNicknameWinner;
 
         batch = new SpriteBatch();
         background = new Texture("statistics_background.png");
@@ -48,7 +51,7 @@ public class StatisticsWindow implements Screen {
         backButton.textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                xonixNewEdition.setScreen(new MainWindow(xonixNewEdition, winnerNickname));
+                xonixNewEdition.setScreen(new MainWindow(xonixNewEdition, winnerNickname, place2Nickname));
             }
         });
         stage.addActor(backButton.textButton);
@@ -77,11 +80,18 @@ public class StatisticsWindow implements Screen {
         batch.draw(background, 0, 0);
         textFont.setColor(Color.BLACK);
         textFont.draw(batch, winnerLabel, 800, 560);
-        textFont.setColor(Color.BLUE);
+        if(isBlueNicknameWinner)
+            textFont.setColor(Color.BLUE);
+        else
+            textFont.setColor(Color.RED);
         textFont.draw(batch, winnerNickname + " - " + capturedAreaPercent, 810, 510);
         textFont.setColor(Color.BLACK);
         textFont.draw(batch, place2Label, 800, 460);
-        textFont.setColor(Color.RED);
+        if(isBlueNicknameWinner)
+            textFont.setColor(Color.RED);
+        else
+            textFont.setColor(Color.BLUE);
+        textFont.draw(batch, place2Nickname + " - " + capturedAreaPercent, 810, 410);
         textFont.setColor(Color.BLACK);
         textFont.draw(batch, timeSpentLabel + timeout, 700, 310);
 
