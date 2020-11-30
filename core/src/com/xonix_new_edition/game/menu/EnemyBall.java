@@ -62,7 +62,6 @@ public class EnemyBall {
         }
     }
 
-
     public void setNewDirectionVertical(){
         switch (direction){
             case UP_LEFT: direction = EnemyBallDirection.UP_RIGHT; break;

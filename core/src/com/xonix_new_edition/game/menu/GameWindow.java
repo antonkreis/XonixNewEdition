@@ -245,6 +245,34 @@ public class GameWindow implements Screen {
         Float redCapturedAreaPercent;
         Float blueCapturedAreaPercent;
 
+        if(fieldGrid[((int)enemyBall.getPosition().x + 15) / 5][(659 - (int)enemyBall.getPosition().y + 15) / 5] == 11
+        || fieldGrid[((int)blueBall.getPosition().x + 15) / 5][(659 - (int)blueBall.getPosition().y + 15) / 5] == 11){
+            for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
+                for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
+                    if(fieldGrid[i][j] == 11)
+                        fieldGrid[i][j] = 0;
+                }
+            }
+
+            redCaptureBegin = false;
+            redCaptureAborted = true;
+        }
+
+
+        if(fieldGrid[((int)enemyBall.getPosition().x + 15) / 5][(659 - (int)enemyBall.getPosition().y + 15) / 5] == 1
+            || fieldGrid[((int)redBall.getPosition().x + 15) / 5][(659 - (int)redBall.getPosition().y + 15) / 5] == 1){
+            for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
+                for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
+                    if(fieldGrid[i][j] == 1)
+                        fieldGrid[i][j] = 0;
+                }
+            }
+
+            blueCaptureBegin = false;
+            blueCaptureAborted = true;
+        }
+
+
         if(fieldGrid[((int)redBallPosition.x + 15) / 5][(659 - (int)redBallPosition.y + 15) / 5] == 11){
             redCaptureBegin = false;
             redCaptureAborted = true;
@@ -275,12 +303,12 @@ public class GameWindow implements Screen {
             }
         }
 
-        if((fieldGrid[((int)blueBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)redBallPosition.y - 15) / FIELD_CELL_SIZE] == 3
-                || fieldGrid[((int)redBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)redBallPosition.y - 15) / FIELD_CELL_SIZE] == 12
-                || fieldGrid[((int)redBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)redBallPosition.y - 15) / FIELD_CELL_SIZE] == 2)
-                && redCaptureAborted) {
-            redCaptureAborted = false;
-            redBall.setDefaultDirection();
+        if((fieldGrid[((int)blueBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - 15) / FIELD_CELL_SIZE] == 3
+                || fieldGrid[((int)blueBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - 15) / FIELD_CELL_SIZE] == 12
+                || fieldGrid[((int)blueBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - 15) / FIELD_CELL_SIZE] == 2)
+                && blueCaptureAborted) {
+            blueCaptureAborted = false;
+            blueBall.setDefaultDirection();
         }
 
         if(fieldGrid[((int)redBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)redBallPosition.y - 15) / FIELD_CELL_SIZE] != 3
@@ -293,18 +321,55 @@ public class GameWindow implements Screen {
         else{
             if(redCaptureBegin){
                 redBall.setDefaultDirection();
+                fieldFill(((int)(enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE),
+                        (int)((689 - enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE), true);
                 if(fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 3
-                        && fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 12
-                        && fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 2)
-                    fieldFill(((int)(blueBall.getPosition().x - 15) / FIELD_CELL_SIZE),
+                       && fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 12
+                       && fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 2){
+                    fieldFill(((int)(blueBall.getPosition().x + 15) / FIELD_CELL_SIZE),
                             (int)((689 - blueBall.getPosition().y - 15) / FIELD_CELL_SIZE), true);
-                else
-                    for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
-                        for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
-                            if(fieldGrid[i][j] == 11)
-                                fieldGrid[i][j] = 0;
-                        }
+                }
+                else if((blueCaptureBegin && (
+                        //fieldGrid[((int)blueBall.getPosition().x + 15 + 5) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
+                        //|| fieldGrid[((int)blueBall.getPosition().x + 15 + 5) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
+                        //|| fieldGrid[((int)blueBall.getPosition().x + 15 + 5) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
+                        //|| fieldGrid[((int)blueBall.getPosition().x + 15 - 5) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
+                        //|| fieldGrid[((int)blueBall.getPosition().x + 15 - 5) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
+                        //|| fieldGrid[((int)blueBall.getPosition().x + 15 - 5) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
+                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15 + 10) / FIELD_CELL_SIZE] == 12
+                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15 + 10) / FIELD_CELL_SIZE] == 3
+                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15 + 10) / FIELD_CELL_SIZE] == 2
+                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
+                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
+                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
+                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
+                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
+                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
+                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
+                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
+                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
+                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15 + 10) / FIELD_CELL_SIZE] == 12
+                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15 + 10) / FIELD_CELL_SIZE] == 3
+                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15 + 10) / FIELD_CELL_SIZE] == 2
+                        fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
+                                || fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
+                                || fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2))){
+                    //System.out.println("ble");
+                    fieldFill(((int)(blueBall.getPosition().x + 15) / FIELD_CELL_SIZE),
+                            (int)((689 - blueBall.getPosition().y - 15) / FIELD_CELL_SIZE), true);
+                }
+
+                //System.out.println("blue");
+                //System.out.println((blueBall.getPosition().x + 15) / FIELD_CELL_SIZE);
+
+                for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
+                    for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++) {
+                        if(fieldGrid[i][j] == 0)
+                            fieldGrid[i][j] = 12;
+                        if(fieldGrid[i][j] == 17)
+                            fieldGrid[i][j] = 0;
                     }
+                }
             }
 
             redCaptureBegin = false;
@@ -313,25 +378,73 @@ public class GameWindow implements Screen {
                 for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
                     if(fieldGrid[i][j] == 11)
                         fieldGrid[i][j] = 12;
-//                    if(fieldGrid[i][j] == 12)
-//                        redCellsCounter++;
                 }
             }
         }
 
         if(fieldGrid[((int)blueBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - 15) / FIELD_CELL_SIZE] != 3
-                && fieldGrid[((int)blueBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - 15) / FIELD_CELL_SIZE] != 2){
+                && fieldGrid[((int)blueBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - 15) / FIELD_CELL_SIZE] != 12
+                && fieldGrid[((int)blueBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - 15) / FIELD_CELL_SIZE] != 2
+                && !blueCaptureAborted){
             fieldGrid[((int)blueBallPosition.x + 15) / 5][(689 - (int)blueBallPosition.y - 15) / 5] = 1;
             blueCaptureBegin = true;
         }
         else{
             if(blueCaptureBegin){
                 blueBall.setDefaultDirection();
-                if(fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 3
-                        && fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 2
-                        && fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 12)
-                    fieldFill(((int)(redBall.getPosition().x - 15) / FIELD_CELL_SIZE),
+                fieldFill(((int)(enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE),
+                        (int)((689 - enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE), false);
+                if(fieldGrid[((int)redBall.getPosition().x - 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 3
+                        && fieldGrid[((int)redBall.getPosition().x - 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 2
+                        && fieldGrid[((int)redBall.getPosition().x - 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 12){
+
+                    //System.out.println("bla");
+                    fieldFill(((int)(redBall.getPosition().x + 15) / FIELD_CELL_SIZE),
                             (int)((689 - redBall.getPosition().y - 15) / FIELD_CELL_SIZE), false);
+                }
+                else if((redCaptureBegin && (
+                        //fieldGrid[((int)redBall.getPosition().x + 15 + 5) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
+                        //|| fieldGrid[((int)redBall.getPosition().x + 15 + 5) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
+                        //|| fieldGrid[((int)redBall.getPosition().x + 15 + 5) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
+                        //|| fieldGrid[((int)redBall.getPosition().x + 15 - 5) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
+                        //|| fieldGrid[((int)redBall.getPosition().x + 15 - 5) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
+                        //|| fieldGrid[((int)redBall.getPosition().x + 15 - 5) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
+                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15 + 10) / FIELD_CELL_SIZE] == 12
+                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15 + 10) / FIELD_CELL_SIZE] == 3
+                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15 + 10) / FIELD_CELL_SIZE] == 2
+                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15 ) / FIELD_CELL_SIZE] == 12
+                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15 ) / FIELD_CELL_SIZE] == 3
+                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15 ) / FIELD_CELL_SIZE] == 2
+                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
+                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
+                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
+                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
+                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
+                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
+                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15 + 10) / FIELD_CELL_SIZE] == 12
+                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15 + 10) / FIELD_CELL_SIZE] == 3
+                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15 + 10) / FIELD_CELL_SIZE] == 2
+                        fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15 ) / FIELD_CELL_SIZE] == 12
+                                || fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15 ) / FIELD_CELL_SIZE] == 3
+                                || fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15 ) / FIELD_CELL_SIZE] == 2)))
+                {
+                    //System.out.println("bla");
+                    fieldFill(((int)(redBall.getPosition().x + 15) / FIELD_CELL_SIZE),
+                            (int)((689 - redBall.getPosition().y - 15) / FIELD_CELL_SIZE), false);
+                }
+
+                //System.out.println("red");
+                //System.out.println((redBall.getPosition().x + 15) / FIELD_CELL_SIZE);
+                for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
+                    for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++) {
+                        if(fieldGrid[i][j] == 0)
+
+                            fieldGrid[i][j] = 2;
+
+                        if(fieldGrid[i][j] == 7)
+                            fieldGrid[i][j] = 0;
+                    }
+                }
             }
 
             blueCaptureBegin = false;
@@ -340,8 +453,6 @@ public class GameWindow implements Screen {
                 for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
                     if(fieldGrid[i][j] == 1)
                         fieldGrid[i][j] = 2;
-//                    if(fieldGrid[i][j] == 2)
-//                        blueCellsCounter++;
                 }
             }
         }
@@ -354,6 +465,8 @@ public class GameWindow implements Screen {
                     redCellsCounter++;
             }
         }
+
+
 
         redCapturedAreaPercent = redCellsCounter / seaAreaMaxSize * 100;
         blueCapturedAreaPercent = blueCellsCounter / seaAreaMaxSize * 100;
@@ -374,8 +487,6 @@ public class GameWindow implements Screen {
                         blueCapturedAreaPercent.toString().substring(0, blueCapturedAreaPercent.toString().indexOf(".") + 2) + " %",
                         minutes + ":" + seconds, nicknameRed, nicknameBlue, false));
 
-
-
         if(blueCapturedAreaPercent >= areaToWin)
             if(seconds < 10 && seconds >= 0)
                 xonixNewEdition.setScreen(new StatisticsWindow(xonixNewEdition, blueCapturedAreaPercent.toString().substring(0,
@@ -394,15 +505,6 @@ public class GameWindow implements Screen {
                         redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", redCapturedAreaPercent.toString().substring(0,
                 redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":" + seconds, nicknameBlue, nicknameRed, true));
 
-
-        if(fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
-                || fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
-                || fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
-                || fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
-                || fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
-                || fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2){
-            enemyBall.setNewDirectionVertical();
-        }
         if(fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 3
                 || fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 12
                 || fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 2
@@ -410,6 +512,14 @@ public class GameWindow implements Screen {
                 || fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 12
                 || fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 2){
             enemyBall.setNewDirectionHorizontal();
+        }
+        else if(fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
+                || fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
+                || fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
+                || fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
+                || fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
+                || fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2){
+            enemyBall.setNewDirectionVertical();
         }
         //fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] = 30;
     }
@@ -450,17 +560,29 @@ public class GameWindow implements Screen {
             return;
         }
 
-        if(fieldGrid[x][y] == 0){
-            if(isRed)
+        if(fieldGrid[x][y] == 0) {
+            if (isRed)
                 fieldGrid[x][y] = 17;
             else
                 fieldGrid[x][y] = 7;
-
-            fieldFillIteration(x - 1, y, depth + 1, isRed);
-            fieldFillIteration(x + 1, y, depth + 1, isRed);
-            fieldFillIteration(x, y - 1, depth + 1, isRed);
-            fieldFillIteration(x, y + 1, depth + 1, isRed);
         }
+        if(fieldGrid[x- 1][y] == 0)
+            fieldFillIteration(x - 1, y, depth + 1, isRed);
+        if(fieldGrid[x + 1][y] == 0)
+            fieldFillIteration(x + 1, y, depth + 1, isRed);
+        if(fieldGrid[x][y - 1] == 0)
+            fieldFillIteration(x, y - 1, depth + 1, isRed);
+        if(fieldGrid[x][y + 1] == 0)
+            fieldFillIteration(x, y + 1, depth + 1, isRed);
+        if(fieldGrid[x- 1][y -1] == 0)
+            fieldFillIteration(x - 1, y - 1, depth + 1, isRed);
+        if(fieldGrid[x + 1][y + 1] == 0)
+            fieldFillIteration(x + 1, y + 1, depth + 1, isRed);
+        if(fieldGrid[x + 1][y - 1] == 0)
+            fieldFillIteration(x + 1, y - 1, depth + 1, isRed);
+        if(fieldGrid[x - 1][y + 1] == 0)
+            fieldFillIteration(x - 1, y + 1, depth + 1, isRed);
+
     }
 
     private void fieldFill(int x, int y, boolean isRed) { // Idea from YouTube https://www.youtube.com/watch?v=_5W5sYjDBnA
@@ -478,19 +600,19 @@ public class GameWindow implements Screen {
         if(points.size() != 0)
             points.remove(0);
 
-        for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
-            for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++) {
-                if(fieldGrid[i][j] == 0)
-                    if(isRed)
-                        fieldGrid[i][j] = 12;
-                    else
-                        fieldGrid[i][j] = 2;
-                if(fieldGrid[i][j] == 17 && isRed)
-                    fieldGrid[i][j] = 0;
-                if(fieldGrid[i][j] == 7 && !isRed)
-                    fieldGrid[i][j] = 0;
-            }
-        }
+//        for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
+//            for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++) {
+//                if(fieldGrid[i][j] == 0)
+//                    if(isRed)
+//                        fieldGrid[i][j] = 12;
+//                    else
+//                        fieldGrid[i][j] = 2;
+//                if(fieldGrid[i][j] == 17 && isRed)
+//                    fieldGrid[i][j] = 0;
+//                if(fieldGrid[i][j] == 7 && !isRed)
+//                    fieldGrid[i][j] = 0;
+//            }
+//        }
     }
 }
 
