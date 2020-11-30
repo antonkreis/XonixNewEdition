@@ -246,7 +246,7 @@ public class GameWindow implements Screen {
         Float blueCapturedAreaPercent;
 
         if(fieldGrid[((int)enemyBall.getPosition().x + 15) / 5][(659 - (int)enemyBall.getPosition().y + 15) / 5] == 11
-        || fieldGrid[((int)blueBall.getPosition().x + 15) / 5][(659 - (int)blueBall.getPosition().y + 15) / 5] == 11){
+                || fieldGrid[((int)blueBall.getPosition().x + 15) / 5][(659 - (int)blueBall.getPosition().y + 15) / 5] == 11){
             for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
                 for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
                     if(fieldGrid[i][j] == 11)
@@ -260,7 +260,7 @@ public class GameWindow implements Screen {
 
 
         if(fieldGrid[((int)enemyBall.getPosition().x + 15) / 5][(659 - (int)enemyBall.getPosition().y + 15) / 5] == 1
-            || fieldGrid[((int)redBall.getPosition().x + 15) / 5][(659 - (int)redBall.getPosition().y + 15) / 5] == 1){
+                || fieldGrid[((int)redBall.getPosition().x + 15) / 5][(659 - (int)redBall.getPosition().y + 15) / 5] == 1){
             for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
                 for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
                     if(fieldGrid[i][j] == 1)
@@ -324,8 +324,8 @@ public class GameWindow implements Screen {
                 fieldFill(((int)(enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE),
                         (int)((689 - enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE), true);
                 if(fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 3
-                       && fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 12
-                       && fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 2){
+                        && fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 12
+                        && fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 2){
                     fieldFill(((int)(blueBall.getPosition().x + 15) / FIELD_CELL_SIZE),
                             (int)((689 - blueBall.getPosition().y - 15) / FIELD_CELL_SIZE), true);
                 }
@@ -500,11 +500,86 @@ public class GameWindow implements Screen {
                                 redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":" + seconds, nicknameBlue, nicknameRed, true));
 
         if(minutes == 0 && seconds == 0)
-        xonixNewEdition.setScreen(new StatisticsWindow(xonixNewEdition,
-                redCapturedAreaPercent.toString().substring(0,
-                        redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", redCapturedAreaPercent.toString().substring(0,
-                redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":" + seconds, nicknameBlue, nicknameRed, true));
+            xonixNewEdition.setScreen(new StatisticsWindow(xonixNewEdition,
+                    redCapturedAreaPercent.toString().substring(0,
+                            redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", redCapturedAreaPercent.toString().substring(0,
+                    redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":" + seconds, nicknameBlue, nicknameRed, true));
 
+        if((fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 3)
+                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 2)
+                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 12)
+                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 3)
+                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 2)
+                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 12)
+                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 3)
+                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 2)
+                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 12)
+                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 3)
+                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 2)
+                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 12)
+                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 3)
+                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 2)
+                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 12)
+                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 3)
+                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 2)
+                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 12)
+                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 3)
+                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 2)
+                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5  - 15) / FIELD_CELL_SIZE] == 12)
+                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y  - 15) / FIELD_CELL_SIZE] == 2
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 3)
+                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 2)
+                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y  - 15) / FIELD_CELL_SIZE] == 2
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 12)
+                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y  - 15) / FIELD_CELL_SIZE] == 12
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 3)
+                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 2)
+                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 12)
+                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 3)
+                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 2)
+                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 12)
+                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 3)
+                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 2)
+                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 12)
+                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 3)
+                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 2)
+                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
+                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 12)){
+            enemyBall.setNewDirectionEdge();
+        }
+        else
         if(fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 3
                 || fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 12
                 || fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 2
@@ -521,6 +596,8 @@ public class GameWindow implements Screen {
                 || fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2){
             enemyBall.setNewDirectionVertical();
         }
+
+
         //fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] = 30;
     }
 

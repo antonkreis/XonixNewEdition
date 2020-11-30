@@ -80,6 +80,15 @@ public class EnemyBall {
         }
     }
 
+    public void setNewDirectionEdge(){
+        switch (direction){
+            case UP_LEFT: direction = EnemyBallDirection.DOWN_RIGHT; break;
+            case UP_RIGHT: direction = EnemyBallDirection.DOWN_LEFT; break;
+            case DOWN_LEFT: direction = EnemyBallDirection.UP_RIGHT; break;
+            case DOWN_RIGHT: direction = EnemyBallDirection.UP_LEFT; break;
+        }
+    }
+
     public void setPosition(int x, int y){
         position.x = x;
         position.y = y;
