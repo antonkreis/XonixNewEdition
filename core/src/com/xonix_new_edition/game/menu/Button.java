@@ -10,11 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.xonix_new_edition.game.XonixNewEdition;
 
 public class Button{
-    Texture buttonImageUp;
-    Texture buttonImageDown;
+    private Texture buttonImageUp;
+    private Texture buttonImageDown;
     public TextButton textButton;
-    XonixNewEdition xonixNewEdition;
-    Vector2 position;
+    private XonixNewEdition xonixNewEdition;
+    private Vector2 position;
 
     public Button(final XonixNewEdition xonixNewEdition, String fileNameUp, String fileNameDown, int x, int y){
         this.xonixNewEdition = xonixNewEdition;

@@ -14,24 +14,24 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.xonix_new_edition.game.XonixNewEdition;
 
 public class StatisticsWindow implements Screen {
-    Stage stage;
-    XonixNewEdition xonixNewEdition;
-    SpriteBatch batch;
-    Texture background;
-    Button backButton;
-    OrthographicCamera camera;
-    BitmapFont textFont;
-    String timeout;
-    String winnerCapturedAreaPercent;
-    String place2CapturedAreaPercent;
-    String winnerLabel;
-    String place2Label;
-    String timeSpentLabel;
-    String winnerNickname;
-    String place2Nickname;
-    String drawLabel;
-    boolean isBlueNicknameWinner;
-    boolean isDraw;
+    private Stage stage;
+    private XonixNewEdition xonixNewEdition;
+    private SpriteBatch batch;
+    private Texture background;
+    private Button backButton;
+    private OrthographicCamera camera;
+    private BitmapFont textFont;
+    private String timeout;
+    private String winnerCapturedAreaPercent;
+    private String place2CapturedAreaPercent;
+    private String winnerLabel;
+    private String place2Label;
+    private String timeSpentLabel;
+    private String winnerNickname;
+    private String place2Nickname;
+    private String drawLabel;
+    private boolean isBlueNicknameWinner;
+    private boolean isDraw;
 
     StatisticsWindow(final XonixNewEdition xonixNewEdition, String winnerCapturedAreaPercent,
                      String place2CapturedAreaPercent, String timeout, final String winnerNickname,

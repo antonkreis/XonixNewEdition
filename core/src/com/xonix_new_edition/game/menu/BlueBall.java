@@ -7,9 +7,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 public class BlueBall {
-    Texture texture;
-    Vector2 position;
-    int speed = 5;
+    private Texture texture;
+    private Vector2 position;
+    private int speed = 5;
 
     public enum BlueBallDirection{
         DEFAULT,
@@ -19,7 +19,7 @@ public class BlueBall {
         DOWN
     }
 
-    BlueBallDirection direction;
+    private BlueBallDirection direction;
 
     BlueBall(int speed){
         this.speed = speed;

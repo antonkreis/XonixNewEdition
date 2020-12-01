@@ -19,44 +19,44 @@ public class GameWindow implements Screen {
     private final int FIELD_OFFSET = 15;
 
     private int[][] fieldGrid;
-    Stage stage;
-    XonixNewEdition xonixNewEdition;
-    Button leaveButton;
-    SpriteBatch batch;
-    Texture background;
-    OrthographicCamera camera;
-    BlueBall blueBall;
-    RedBall redBall;
-    EnemyBall enemyBall;
-    ShapeRenderer shapeRenderer;
+    private Stage stage;
+    private XonixNewEdition xonixNewEdition;
+    private Button leaveButton;
+    private SpriteBatch batch;
+    private Texture background;
+    private OrthographicCamera camera;
+    private BlueBall blueBall;
+    private RedBall redBall;
+    private EnemyBall enemyBall;
+    private ShapeRenderer shapeRenderer;
     //int amountOfLines;
     //BlueBall.BlueBallDirection currentDirection;
 
-    boolean blueCaptureBegin;
-    boolean redCaptureBegin;
-    boolean redCaptureAborted;
-    boolean blueCaptureAborted;
+    private boolean blueCaptureBegin;
+    private boolean redCaptureBegin;
+    private boolean redCaptureAborted;
+    private boolean blueCaptureAborted;
 
-    ArrayList<Vector2> points;
+    private ArrayList<Vector2> points;
 
-    Texture fieldTexture;
-    Pixmap fieldPixmap;
+    private Texture fieldTexture;
+    private Pixmap fieldPixmap;
 
-    BitmapFont textFont;
-    String blueBallScore;
-    String redBallScore;
-    String scoreLabel;
-    String timeLabel;
-    String time;
-    String nicknameBlue;
-    String nicknameRed;
+    private BitmapFont textFont;
+    private String blueBallScore;
+    private String redBallScore;
+    private String scoreLabel;
+    private String timeLabel;
+    private String time;
+    private String nicknameBlue;
+    private String nicknameRed;
 
-    String timeout;
-    int timeoutInt;
-    int areaToWin;
-    float rawTimeSinceStart = 0;
-    int minutes;
-    int seconds;
+    private String timeout;
+    private int timeoutInt;
+    private int areaToWin;
+    private float rawTimeSinceStart = 0;
+    private int minutes;
+    private int seconds;
 
     GameWindow(final XonixNewEdition xonixNewEdition, String timeout,
                String areaToWin, final String nicknameBlue, final String nickNameRed){

@@ -15,20 +15,20 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.xonix_new_edition.game.XonixNewEdition;
 
 public class MainWindow implements Screen {
-    Stage stage;
-    XonixNewEdition xonixNewEdition;
-    Button joinButton;
-    Button nicknameRedButton;
-    Button nicknameBlueButton;
-    SpriteBatch batch;
-    Texture background;
-    OrthographicCamera camera;
-    BitmapFont nicknameTextFont;
-    String mainWindowNicknameBlue;
-    String mainWindowNicknameRed;
-    String spaces;
-    int nicknameLengthBlue;
-    int nicknameLengthRed;
+    private Stage stage;
+    private XonixNewEdition xonixNewEdition;
+    private Button joinButton;
+    private Button nicknameRedButton;
+    private Button nicknameBlueButton;
+    private SpriteBatch batch;
+    private Texture background;
+    private OrthographicCamera camera;
+    private BitmapFont nicknameTextFont;
+    private String mainWindowNicknameBlue;
+    private String mainWindowNicknameRed;
+    private String spaces;
+    private int nicknameLengthBlue;
+    private int nicknameLengthRed;
 
 
     public MainWindow(final XonixNewEdition xonixNewEdition, final String nicknameBlue, final String nicknameRed){

@@ -14,20 +14,20 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.xonix_new_edition.game.XonixNewEdition;
 
 public class ConfigurationWindow implements Screen {
-    Stage stage;
-    XonixNewEdition xonixNewEdition;
-    Button startButton;
-    Button backButton;
-    Button plusButton1;
-    Button minusButton1;
-    Button plusButton2;
-    Button minusButton2;
-    SpriteBatch batch;
-    Texture background;
-    OrthographicCamera camera;
-    BitmapFont textFont;
-    String timeout;
-    String areaToWin;
+    private Stage stage;
+    private XonixNewEdition xonixNewEdition;
+    private Button startButton;
+    private Button backButton;
+    private Button plusButton1;
+    private Button minusButton1;
+    private Button plusButton2;
+    private Button minusButton2;
+    private SpriteBatch batch;
+    private Texture background;
+    private OrthographicCamera camera;
+    private BitmapFont textFont;
+    private String timeout;
+    private String areaToWin;
 
     ConfigurationWindow(final XonixNewEdition xonixNewEdition, final String nicknameBlue, final String nicknameRed){
         this.xonixNewEdition = xonixNewEdition;

@@ -9,9 +9,9 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.Random;
 
 public class EnemyBall {
-    Texture texture;
-    Vector2 position;
-    int speed = 5;
+    private Texture texture;
+    private Vector2 position;
+    private int speed = 5;
 
     public enum EnemyBallDirection {
         DEFAULT,
@@ -25,7 +25,7 @@ public class EnemyBall {
         DOWN_LEFT,
     }
 
-    EnemyBallDirection direction;
+    private EnemyBallDirection direction;
 
     EnemyBall(int speed){
         this.speed = speed;
