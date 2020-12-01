@@ -1,4 +1,4 @@
-package com.xonix_new_edition.game.menu;
+package com.xonix_new_edition.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -6,12 +6,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-public class BlueBall {
+public class RedBall {
     private Texture texture;
     private Vector2 position;
     private int speed = 5;
 
-    public enum BlueBallDirection{
+    public enum RedBallDirection{
         DEFAULT,
         LEFT,
         RIGHT,
@@ -19,25 +19,25 @@ public class BlueBall {
         DOWN
     }
 
-    private BlueBallDirection direction;
+    private RedBallDirection direction;
 
-    BlueBall(int speed){
+    RedBall(int speed){
         this.speed = speed;
-        texture = new Texture("blue_ball1.png");
-        position = new Vector2(10, 10);
-        direction = BlueBallDirection.DEFAULT;
+        texture = new Texture("red_ball1.png");
+        position = new Vector2(935, 645);
+        direction = RedBallDirection.DEFAULT;
     }
 
     public void setSpeed(int speed){
         this.speed = speed;
     }
 
-    public BlueBallDirection getDirection(){
+    public RedBallDirection getDirection(){
         return direction;
     }
 
     public void setDefaultDirection(){
-        direction = BlueBallDirection.DEFAULT;
+        direction = RedBallDirection.DEFAULT;
     }
 
     public Vector2 getPosition(){
@@ -54,49 +54,50 @@ public class BlueBall {
     }
 
     public void update(){
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
+        if(Gdx.input.isKeyPressed(Input.Keys.A)){
             if(position.x <= 10)
                 return;
-            direction = BlueBallDirection.LEFT;
+            direction = RedBall.RedBallDirection.LEFT;
             position.x -= speed;
         }
-        else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
+        else if(Gdx.input.isKeyPressed(Input.Keys.D)){
             if(position.x >= 935)
                 return;
-            direction = BlueBallDirection.RIGHT;
+            direction = RedBall.RedBallDirection.RIGHT;
             position.x += speed;
         }
-        else if(Gdx.input.isKeyPressed(Input.Keys.UP)){
+        else if(Gdx.input.isKeyPressed(Input.Keys.W)){
             if(position.y >= 645)
                 return;
-            direction = BlueBallDirection.UP;
+            direction = RedBall.RedBallDirection.UP;
             position.y += speed;
         }
-        else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
+        else if(Gdx.input.isKeyPressed(Input.Keys.S)){
             if(position.y <= 10)
                 return;
-            direction = BlueBallDirection.DOWN;
+            direction = RedBall.RedBallDirection.DOWN;
             position.y -= speed;
         }
-        else if(direction == BlueBallDirection.LEFT){
+        else if(direction == RedBall.RedBallDirection.LEFT){
             if(position.x <= 10)
                 return;
             position.x -= speed;
         }
-        else if(direction == BlueBallDirection.RIGHT){
+        else if(direction == RedBall.RedBallDirection.RIGHT){
             if(position.x >= 935)
                 return;
             position.x += speed;
         }
-        else if(direction == BlueBallDirection.UP){
+        else if(direction == RedBall.RedBallDirection.UP){
             if(position.y >= 645)
                 return;
             position.y += speed;
         }
-        else if(direction == BlueBallDirection.DOWN){
+        else if(direction == RedBall.RedBallDirection.DOWN){
             if(position.y <= 10)
                 return;
             position.y -= speed;
         }
     }
 }
+

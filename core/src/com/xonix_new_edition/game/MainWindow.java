@@ -1,4 +1,4 @@
-package com.xonix_new_edition.game.menu;
+package com.xonix_new_edition.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -12,7 +12,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.xonix_new_edition.game.XonixNewEdition;
 
 public class MainWindow implements Screen {
     private Stage stage;

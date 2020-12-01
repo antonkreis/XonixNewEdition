@@ -1,4 +1,4 @@
-package com.xonix_new_edition.game.menu;
+package com.xonix_new_edition.game;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
