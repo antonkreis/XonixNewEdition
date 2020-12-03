@@ -39,7 +39,7 @@ public class MainWindow implements Screen {
 
         nicknameTextFont = new BitmapFont(Gdx.files.internal("font2.fnt"));
         nicknameLengthBlue = nicknameBlue.length();
-        nicknameLengthRed = nicknameBlue.length();
+        nicknameLengthRed = nicknameRed.length();
 
         batch = new SpriteBatch();
 
@@ -63,11 +63,13 @@ public class MainWindow implements Screen {
                     @Override
                     public void input(String input)
                     {
-                        if(input.length() > 12)
-                            input = input.substring(0, 12);
-                        nicknameLengthRed = input.length();
-                        mainWindowNicknameRed = input;
-                        System.out.println(input);
+                        if(input.length() > 0){
+                            if(input.length() > 12)
+                                input = input.substring(0, 12);
+                            nicknameLengthRed = input.length();
+                            mainWindowNicknameRed = input;
+                            System.out.println(input);
+                        }
                     }
 
                     @Override
@@ -91,11 +93,13 @@ public class MainWindow implements Screen {
                     @Override
                     public void input(String input)
                     {
-                        if(input.length() > 12)
-                            input = input.substring(0, 12);
-                        nicknameLengthBlue = input.length();
-                        mainWindowNicknameBlue = input;
-                        System.out.println(input);
+                        if(input.length() > 0) {
+                            if (input.length() > 12)
+                                input = input.substring(0, 12);
+                            nicknameLengthBlue = input.length();
+                            mainWindowNicknameBlue = input;
+                            System.out.println(input);
+                        }
                     }
 
                     @Override
