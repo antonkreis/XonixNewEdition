@@ -19,6 +19,7 @@ public class MainWindow implements Screen {
     private Button joinButton;
     private Button nicknameRedButton;
     private Button nicknameBlueButton;
+    private Button helpButton;
     private SpriteBatch batch;
     private Texture background;
     private OrthographicCamera camera;
@@ -52,6 +53,16 @@ public class MainWindow implements Screen {
             }
         });
         stage.addActor(joinButton.textButton);
+
+        helpButton = new Button(xonixNewEdition, "help_button.png",
+                "rect_button_down.png", 1000, 400);
+        helpButton.textButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                xonixNewEdition.setScreen(new HelpWindow(xonixNewEdition, mainWindowNicknameBlue, mainWindowNicknameRed));
+            }
+        });
+        stage.addActor(helpButton.textButton);
 
         nicknameRedButton = new Button(xonixNewEdition, "nickname_button_up.png",
                 "rect_button_down.png", 1000, 200);
