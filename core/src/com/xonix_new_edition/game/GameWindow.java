@@ -16,6 +16,16 @@ import java.util.ArrayList;
 public class GameWindow implements Screen {
     private final int FIELD_CELL_SIZE = 5;
     private final int FIELD_OFFSET = 15;
+    private final int LIGHT_GRAY_COLOR = 3;
+    private final int BLUE_TERRITORY_COLOR = 2;
+    private final int RED_TERRITORY_COLOR = 12;
+    private final int BLUE_TRACK_COLOR = 1;
+    private final int RED_TRACK_COLOR = 11;
+    private final int BLUE_TEMP_COLOR = 7;
+    private final int RED_TEMP_COLOR = 17;
+    private final int GRAY_BORDER_WIDTH = 7;
+    private final int FIELD_SIZE_X = 980;
+    private final int FIELD_SIZE_Y = 690;
 
     private int[][] fieldGrid;
     private Stage stage;
@@ -94,24 +104,24 @@ public class GameWindow implements Screen {
         //amountOfLines = 1;
         //currentDirection = BlueBall.BlueBallDirection.DEFAULT;
 
-        fieldGrid = new int[980 / FIELD_CELL_SIZE][690 / FIELD_CELL_SIZE];
-        for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
+        fieldGrid = new int[FIELD_SIZE_X / FIELD_CELL_SIZE][690 / FIELD_CELL_SIZE];
+        for(int i = 0; i < FIELD_SIZE_X / FIELD_CELL_SIZE; i++){
             for(int j = 0; j < 35 / FIELD_CELL_SIZE; j++) {
-                fieldGrid[i][j] = 3;
+                fieldGrid[i][j] = LIGHT_GRAY_COLOR;
             }
 
             for(int j = 0; j < 30; j++) {
-                fieldGrid[i][(690 - j)/ FIELD_CELL_SIZE  - 1] = 3;
+                fieldGrid[i][(FIELD_SIZE_Y - j)/ FIELD_CELL_SIZE  - 1] = LIGHT_GRAY_COLOR;
             }
         }
 
-        for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
+        for(int j = 0; j < FIELD_SIZE_Y / FIELD_CELL_SIZE; j++){
             for(int i = 0; i < 35 / FIELD_CELL_SIZE; i++) {
-                fieldGrid[i][j] = 3;
+                fieldGrid[i][j] = LIGHT_GRAY_COLOR;
             }
 
             for(int i = 0; i < 30; i++) {
-                fieldGrid[(980 - i)/ FIELD_CELL_SIZE  - 1][j] = 3;
+                fieldGrid[(FIELD_SIZE_X - i)/ FIELD_CELL_SIZE  - 1][j] = LIGHT_GRAY_COLOR;
             }
         }
 
@@ -150,19 +160,19 @@ public class GameWindow implements Screen {
 
         //fieldGrid[((int)redBall.getPosition().x + 15) / 5][(659 - (int)redBall.getPosition().y + 15) / 5] = 2;
 
-        for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
-            for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
-                if(fieldGrid[i][j] == 1){
+        for(int i = 0; i < FIELD_SIZE_X / FIELD_CELL_SIZE; i++){
+            for(int j = 0; j < FIELD_SIZE_Y / FIELD_CELL_SIZE; j++){
+                if(fieldGrid[i][j] == BLUE_TRACK_COLOR){
                     fieldPixmap.setColor(Color.BLUE);
                     fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
                             FIELD_CELL_SIZE, FIELD_CELL_SIZE);
                 }
-                else if(fieldGrid[i][j] == 3){
+                else if(fieldGrid[i][j] == LIGHT_GRAY_COLOR){
                     fieldPixmap.setColor(Color.LIGHT_GRAY);
                     fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
                             FIELD_CELL_SIZE, FIELD_CELL_SIZE);
                 }
-                else if(fieldGrid[i][j] == 2){
+                else if(fieldGrid[i][j] == BLUE_TERRITORY_COLOR){
                     fieldPixmap.setColor(Color.BLUE);
                     fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
                             FIELD_CELL_SIZE, FIELD_CELL_SIZE);
@@ -172,12 +182,12 @@ public class GameWindow implements Screen {
                     fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
                             FIELD_CELL_SIZE, FIELD_CELL_SIZE);
                 }
-                else if(fieldGrid[i][j] == 11){
+                else if(fieldGrid[i][j] == RED_TRACK_COLOR){
                     fieldPixmap.setColor(Color.RED);
                     fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
                             FIELD_CELL_SIZE, FIELD_CELL_SIZE);
                 }
-                else if(fieldGrid[i][j] == 12){
+                else if(fieldGrid[i][j] == RED_TERRITORY_COLOR){
                     fieldPixmap.setColor(Color.RED);
                     fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
                             FIELD_CELL_SIZE, FIELD_CELL_SIZE);
@@ -240,15 +250,15 @@ public class GameWindow implements Screen {
         Vector2 blueBallPosition = blueBall.getPosition();
         float redCellsCounter = 0;
         float blueCellsCounter = 0;
-        int seaAreaMaxSize = (980 / FIELD_CELL_SIZE - 7 - 7) * (690 / FIELD_CELL_SIZE - 7 - 7);
+        int seaAreaMaxSize = (FIELD_SIZE_X / FIELD_CELL_SIZE - GRAY_BORDER_WIDTH - GRAY_BORDER_WIDTH) * (FIELD_SIZE_Y / FIELD_CELL_SIZE - GRAY_BORDER_WIDTH - GRAY_BORDER_WIDTH);
         Float redCapturedAreaPercent;
         Float blueCapturedAreaPercent;
 
-        if(fieldGrid[((int)enemyBall.getPosition().x + 15) / 5][(659 - (int)enemyBall.getPosition().y + 15) / 5] == 11
-                || fieldGrid[((int)blueBall.getPosition().x + 15) / 5][(659 - (int)blueBall.getPosition().y + 15) / 5] == 11){
-            for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
-                for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
-                    if(fieldGrid[i][j] == 11)
+        if(fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(659 - (int)enemyBall.getPosition().y + FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TRACK_COLOR
+                || fieldGrid[((int)blueBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(659 - (int)blueBall.getPosition().y + FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TRACK_COLOR){
+            for(int i = 0; i < FIELD_SIZE_X / FIELD_CELL_SIZE; i++){
+                for(int j = 0; j < FIELD_SIZE_Y / FIELD_CELL_SIZE; j++){
+                    if(fieldGrid[i][j] == RED_TRACK_COLOR)
                         fieldGrid[i][j] = 0;
                 }
             }
@@ -258,11 +268,11 @@ public class GameWindow implements Screen {
         }
 
 
-        if(fieldGrid[((int)enemyBall.getPosition().x + 15) / 5][(659 - (int)enemyBall.getPosition().y + 15) / 5] == 1
-                || fieldGrid[((int)redBall.getPosition().x + 15) / 5][(659 - (int)redBall.getPosition().y + 15) / 5] == 1){
-            for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
-                for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
-                    if(fieldGrid[i][j] == 1)
+        if(fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(659 - (int)enemyBall.getPosition().y + FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TRACK_COLOR
+                || fieldGrid[((int)redBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(659 - (int)redBall.getPosition().y + FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TRACK_COLOR){
+            for(int i = 0; i < FIELD_SIZE_X / FIELD_CELL_SIZE; i++){
+                for(int j = 0; j < FIELD_SIZE_Y / FIELD_CELL_SIZE; j++){
+                    if(fieldGrid[i][j] == BLUE_TRACK_COLOR)
                         fieldGrid[i][j] = 0;
                 }
             }
@@ -272,100 +282,79 @@ public class GameWindow implements Screen {
         }
 
 
-        if(fieldGrid[((int)redBallPosition.x + 15) / 5][(659 - (int)redBallPosition.y + 15) / 5] == 11){
+        if(fieldGrid[((int)redBallPosition.x + FIELD_OFFSET) / 5][(659 - (int)redBallPosition.y + FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TRACK_COLOR){
             redCaptureBegin = false;
             redCaptureAborted = true;
-            for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
-                for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
-                    if(fieldGrid[i][j] == 11)
+            for(int i = 0; i < FIELD_SIZE_X / FIELD_CELL_SIZE; i++){
+                for(int j = 0; j < FIELD_SIZE_Y / FIELD_CELL_SIZE; j++){
+                    if(fieldGrid[i][j] == RED_TRACK_COLOR)
                         fieldGrid[i][j] = 0;
                 }
             }
         }
 
-        if((fieldGrid[((int)redBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)redBallPosition.y - 15) / FIELD_CELL_SIZE] == 3
-                || fieldGrid[((int)redBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)redBallPosition.y - 15) / FIELD_CELL_SIZE] == 12
-                || fieldGrid[((int)redBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)redBallPosition.y - 15) / FIELD_CELL_SIZE] == 2)
+        if((fieldGrid[((int)redBallPosition.x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)redBallPosition.y - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR
+                || fieldGrid[((int)redBallPosition.x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)redBallPosition.y - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR
+                || fieldGrid[((int)redBallPosition.x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)redBallPosition.y - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR)
                 && redCaptureAborted) {
             redCaptureAborted = false;
             redBall.setDefaultDirection();
         }
 
-        if(fieldGrid[((int)blueBallPosition.x + 15) / 5][(659 - (int)blueBallPosition.y + 15) / 5] == 1){
+        if(fieldGrid[((int)blueBallPosition.x + FIELD_OFFSET) / FIELD_CELL_SIZE][(659 - (int)blueBallPosition.y + FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TRACK_COLOR){
             blueCaptureBegin = false;
             blueCaptureAborted = true;
-            for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
-                for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
-                    if(fieldGrid[i][j] == 1)
+            for(int i = 0; i < FIELD_SIZE_X / FIELD_CELL_SIZE; i++){
+                for(int j = 0; j < FIELD_SIZE_Y / FIELD_CELL_SIZE; j++){
+                    if(fieldGrid[i][j] == BLUE_TRACK_COLOR)
                         fieldGrid[i][j] = 0;
                 }
             }
         }
 
-        if((fieldGrid[((int)blueBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - 15) / FIELD_CELL_SIZE] == 3
-                || fieldGrid[((int)blueBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - 15) / FIELD_CELL_SIZE] == 12
-                || fieldGrid[((int)blueBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - 15) / FIELD_CELL_SIZE] == 2)
+        if((fieldGrid[((int)blueBallPosition.x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR
+                || fieldGrid[((int)blueBallPosition.x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR
+                || fieldGrid[((int)blueBallPosition.x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR)
                 && blueCaptureAborted) {
             blueCaptureAborted = false;
             blueBall.setDefaultDirection();
         }
 
-        if(fieldGrid[((int)redBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)redBallPosition.y - 15) / FIELD_CELL_SIZE] != 3
-                && fieldGrid[((int)redBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)redBallPosition.y - 15) / FIELD_CELL_SIZE] != 12
-                && fieldGrid[((int)redBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)redBallPosition.y - 15) / FIELD_CELL_SIZE] != 2
+        if(fieldGrid[((int)redBallPosition.x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)redBallPosition.y - FIELD_OFFSET) / FIELD_CELL_SIZE] != LIGHT_GRAY_COLOR
+                && fieldGrid[((int)redBallPosition.x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)redBallPosition.y - FIELD_OFFSET) / FIELD_CELL_SIZE] != RED_TERRITORY_COLOR
+                && fieldGrid[((int)redBallPosition.x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)redBallPosition.y - FIELD_OFFSET) / FIELD_CELL_SIZE] != BLUE_TERRITORY_COLOR
                 && !redCaptureAborted){
-            fieldGrid[((int)redBallPosition.x + 15) / 5][(689 - (int)redBallPosition.y - 15) / 5] = 11;
+            fieldGrid[((int)redBallPosition.x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)redBallPosition.y - FIELD_OFFSET) / FIELD_CELL_SIZE] = RED_TRACK_COLOR;
             redCaptureBegin = true;
         }
         else{
             if(redCaptureBegin){
                 redBall.setDefaultDirection();
-                fieldFill(((int)(enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE),
-                        (int)((689 - enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE), true);
-                if(fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 3
-                        && fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 12
-                        && fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 2){
-                    fieldFill(((int)(blueBall.getPosition().x + 15) / FIELD_CELL_SIZE),
-                            (int)((689 - blueBall.getPosition().y - 15) / FIELD_CELL_SIZE), true);
+                fieldFill(((int)(enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE),
+                        (int)((689 - enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE), true);
+                if(fieldGrid[((int)blueBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] != LIGHT_GRAY_COLOR
+                        && fieldGrid[((int)blueBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] != RED_TERRITORY_COLOR
+                        && fieldGrid[((int)blueBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] != BLUE_TERRITORY_COLOR){
+                    fieldFill(((int)(blueBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE),
+                            (int)((689 - blueBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE), true);
                 }
                 else if((blueCaptureBegin && (
-                        //fieldGrid[((int)blueBall.getPosition().x + 15 + 5) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
-                        //|| fieldGrid[((int)blueBall.getPosition().x + 15 + 5) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
-                        //|| fieldGrid[((int)blueBall.getPosition().x + 15 + 5) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
-                        //|| fieldGrid[((int)blueBall.getPosition().x + 15 - 5) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
-                        //|| fieldGrid[((int)blueBall.getPosition().x + 15 - 5) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
-                        //|| fieldGrid[((int)blueBall.getPosition().x + 15 - 5) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
-                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15 + 10) / FIELD_CELL_SIZE] == 12
-                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15 + 10) / FIELD_CELL_SIZE] == 3
-                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15 + 10) / FIELD_CELL_SIZE] == 2
-                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
-                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
-                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
-                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
-                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
-                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
-                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
-                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
-                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
-                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15 + 10) / FIELD_CELL_SIZE] == 12
-                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15 + 10) / FIELD_CELL_SIZE] == 3
-                        //|| fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15 + 10) / FIELD_CELL_SIZE] == 2
-                        fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
-                                || fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
-                                || fieldGrid[((int)blueBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2))){
+                        fieldGrid[((int)blueBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR
+                                || fieldGrid[((int)blueBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR
+                                || fieldGrid[((int)blueBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)blueBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR))){
                     //System.out.println("ble");
-                    fieldFill(((int)(blueBall.getPosition().x + 15) / FIELD_CELL_SIZE),
-                            (int)((689 - blueBall.getPosition().y - 15) / FIELD_CELL_SIZE), true);
+                    fieldFill(((int)(blueBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE),
+                            (int)((689 - blueBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE), true);
                 }
 
                 //System.out.println("blue");
                 //System.out.println((blueBall.getPosition().x + 15) / FIELD_CELL_SIZE);
 
-                for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
-                    for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++) {
+                for(int i = 0; i < FIELD_SIZE_X / FIELD_CELL_SIZE; i++){
+                    for(int j = 0; j < FIELD_SIZE_Y / FIELD_CELL_SIZE; j++) {
                         if(fieldGrid[i][j] == 0)
-                            fieldGrid[i][j] = 12;
-                        if(fieldGrid[i][j] == 17)
+                            fieldGrid[i][j] = RED_TERRITORY_COLOR;
+                        if(fieldGrid[i][j] == RED_TEMP_COLOR)
                             fieldGrid[i][j] = 0;
                     }
                 }
@@ -373,74 +362,53 @@ public class GameWindow implements Screen {
 
             redCaptureBegin = false;
 
-            for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
-                for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
-                    if(fieldGrid[i][j] == 11)
-                        fieldGrid[i][j] = 12;
+            for(int i = 0; i < FIELD_SIZE_X / FIELD_CELL_SIZE; i++){
+                for(int j = 0; j < FIELD_SIZE_Y / FIELD_CELL_SIZE; j++){
+                    if(fieldGrid[i][j] == RED_TRACK_COLOR)
+                        fieldGrid[i][j] = RED_TERRITORY_COLOR;
                 }
             }
         }
 
-        if(fieldGrid[((int)blueBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - 15) / FIELD_CELL_SIZE] != 3
-                && fieldGrid[((int)blueBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - 15) / FIELD_CELL_SIZE] != 12
-                && fieldGrid[((int)blueBallPosition.x + 15) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - 15) / FIELD_CELL_SIZE] != 2
+        if(fieldGrid[((int)blueBallPosition.x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - FIELD_OFFSET) / FIELD_CELL_SIZE] != LIGHT_GRAY_COLOR
+                && fieldGrid[((int)blueBallPosition.x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - FIELD_OFFSET) / FIELD_CELL_SIZE] != RED_TERRITORY_COLOR
+                && fieldGrid[((int)blueBallPosition.x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - FIELD_OFFSET) / FIELD_CELL_SIZE] != BLUE_TERRITORY_COLOR
                 && !blueCaptureAborted){
-            fieldGrid[((int)blueBallPosition.x + 15) / 5][(689 - (int)blueBallPosition.y - 15) / 5] = 1;
+            fieldGrid[((int)blueBallPosition.x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)blueBallPosition.y - FIELD_OFFSET) / FIELD_CELL_SIZE] = BLUE_TRACK_COLOR;
             blueCaptureBegin = true;
         }
         else{
             if(blueCaptureBegin){
                 blueBall.setDefaultDirection();
-                fieldFill(((int)(enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE),
-                        (int)((689 - enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE), false);
-                if(fieldGrid[((int)redBall.getPosition().x - 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 3
-                        && fieldGrid[((int)redBall.getPosition().x - 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 2
-                        && fieldGrid[((int)redBall.getPosition().x - 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] != 12){
+                fieldFill(((int)(enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE),
+                        (int)((689 - enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE), false);
+                if(fieldGrid[((int)redBall.getPosition().x - FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] != LIGHT_GRAY_COLOR
+                        && fieldGrid[((int)redBall.getPosition().x - FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] != BLUE_TERRITORY_COLOR
+                        && fieldGrid[((int)redBall.getPosition().x - FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] != RED_TERRITORY_COLOR){
 
                     //System.out.println("bla");
-                    fieldFill(((int)(redBall.getPosition().x + 15) / FIELD_CELL_SIZE),
-                            (int)((689 - redBall.getPosition().y - 15) / FIELD_CELL_SIZE), false);
+                    fieldFill(((int)(redBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE),
+                            (int)((689 - redBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE), false);
                 }
                 else if((redCaptureBegin && (
-                        //fieldGrid[((int)redBall.getPosition().x + 15 + 5) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
-                        //|| fieldGrid[((int)redBall.getPosition().x + 15 + 5) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
-                        //|| fieldGrid[((int)redBall.getPosition().x + 15 + 5) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
-                        //|| fieldGrid[((int)redBall.getPosition().x + 15 - 5) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
-                        //|| fieldGrid[((int)redBall.getPosition().x + 15 - 5) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
-                        //|| fieldGrid[((int)redBall.getPosition().x + 15 - 5) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
-                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15 + 10) / FIELD_CELL_SIZE] == 12
-                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15 + 10) / FIELD_CELL_SIZE] == 3
-                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15 + 10) / FIELD_CELL_SIZE] == 2
-                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15 ) / FIELD_CELL_SIZE] == 12
-                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15 ) / FIELD_CELL_SIZE] == 3
-                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15 ) / FIELD_CELL_SIZE] == 2
-                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
-                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
-                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
-                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
-                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
-                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
-                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15 + 10) / FIELD_CELL_SIZE] == 12
-                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15 + 10) / FIELD_CELL_SIZE] == 3
-                        //|| fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15 + 10) / FIELD_CELL_SIZE] == 2
-                        fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15 ) / FIELD_CELL_SIZE] == 12
-                                || fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15 ) / FIELD_CELL_SIZE] == 3
-                                || fieldGrid[((int)redBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - 15 ) / FIELD_CELL_SIZE] == 2)))
+                        fieldGrid[((int)redBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR
+                                || fieldGrid[((int)redBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR
+                                || fieldGrid[((int)redBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)redBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR)))
                 {
                     //System.out.println("bla");
-                    fieldFill(((int)(redBall.getPosition().x + 15) / FIELD_CELL_SIZE),
-                            (int)((689 - redBall.getPosition().y - 15) / FIELD_CELL_SIZE), false);
+                    fieldFill(((int)(redBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE),
+                            (int)((689 - redBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE), false);
                 }
 
                 //System.out.println("red");
                 //System.out.println((redBall.getPosition().x + 15) / FIELD_CELL_SIZE);
-                for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
-                    for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++) {
+                for(int i = 0; i < FIELD_SIZE_X / FIELD_CELL_SIZE; i++){
+                    for(int j = 0; j < FIELD_SIZE_Y / FIELD_CELL_SIZE; j++) {
                         if(fieldGrid[i][j] == 0)
 
-                            fieldGrid[i][j] = 2;
+                            fieldGrid[i][j] = BLUE_TERRITORY_COLOR;
 
-                        if(fieldGrid[i][j] == 7)
+                        if(fieldGrid[i][j] == BLUE_TEMP_COLOR)
                             fieldGrid[i][j] = 0;
                     }
                 }
@@ -448,19 +416,19 @@ public class GameWindow implements Screen {
 
             blueCaptureBegin = false;
 
-            for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
-                for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
-                    if(fieldGrid[i][j] == 1)
-                        fieldGrid[i][j] = 2;
+            for(int i = 0; i < FIELD_SIZE_X / FIELD_CELL_SIZE; i++){
+                for(int j = 0; j < FIELD_SIZE_Y / FIELD_CELL_SIZE; j++){
+                    if(fieldGrid[i][j] == BLUE_TRACK_COLOR)
+                        fieldGrid[i][j] = BLUE_TERRITORY_COLOR;
                 }
             }
         }
 
-        for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
-            for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++){
-                if(fieldGrid[i][j] == 2)
+        for(int i = 0; i < FIELD_SIZE_X / FIELD_CELL_SIZE; i++){
+            for(int j = 0; j < FIELD_SIZE_Y / FIELD_CELL_SIZE; j++){
+                if(fieldGrid[i][j] == BLUE_TERRITORY_COLOR)
                     blueCellsCounter++;
-                if(fieldGrid[i][j] == 12)
+                if(fieldGrid[i][j] == RED_TERRITORY_COLOR)
                     redCellsCounter++;
             }
         }
@@ -504,95 +472,95 @@ public class GameWindow implements Screen {
                             redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", redCapturedAreaPercent.toString().substring(0,
                     redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":" + seconds, nicknameBlue, nicknameRed, true));
 
-        if((fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 3)
-                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 2)
-                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 12)
-                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 3)
-                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 2)
-                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 12)
-                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 3)
-                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 2)
-                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 12)
-                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 3)
-                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 2)
-                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 12)
-                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 3)
-                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 2)
-                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 12)
-                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 3)
-                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 2)
-                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 12)
-                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 3)
-                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 2)
-                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5  - 15) / FIELD_CELL_SIZE] == 12)
-                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y  - 15) / FIELD_CELL_SIZE] == 2
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 3)
-                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 2)
-                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y  - 15) / FIELD_CELL_SIZE] == 2
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 12)
-                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y  - 15) / FIELD_CELL_SIZE] == 12
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 3)
-                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 2)
-                || (fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 12)
-                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 3)
-                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 2)
-                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 12)
-                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 3)
-                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 2)
-                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 12)
-                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 3)
-                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 2)
-                || (fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
-                && fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 12)){
+        if((fieldGrid[((int)enemyBall.getPosition().x + FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x + FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x + FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x + FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x + FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x + FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x + FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x + FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x + FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x - FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x - FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x - FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x - FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x - FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x - FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x - FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x - FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x - FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x + FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x + FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x + FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + FIELD_CELL_SIZE  - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x + FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y  - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x + FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x + FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y  - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x + FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y  - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x + FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x + FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x - FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x - FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x - FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x - FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x - FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x - FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x - FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x - FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR)
+                || (fieldGrid[((int)enemyBall.getPosition().x - FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR
+                && fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR)){
             enemyBall.setNewDirectionEdge();
         }
         else
-        if(fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 3
-                || fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 12
-                || fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 5 - 15) / FIELD_CELL_SIZE] == 2
-                || fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 3
-                || fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 12
-                || fieldGrid[((int)enemyBall.getPosition().x + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + 5 - 15) / FIELD_CELL_SIZE] == 2){
+        if(fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR
+                || fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR
+                || fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR
+                || fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR
+                || fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR
+                || fieldGrid[((int)enemyBall.getPosition().x + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y + FIELD_CELL_SIZE - FIELD_OFFSET) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR){
             enemyBall.setNewDirectionHorizontal();
         }
-        else if(fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
-                || fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
-                || fieldGrid[((int)enemyBall.getPosition().x + 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2
-                || fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 3
-                || fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 12
-                || fieldGrid[((int)enemyBall.getPosition().x - 5 + 15) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == 2){
+        else if(fieldGrid[((int)enemyBall.getPosition().x + FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR
+                || fieldGrid[((int)enemyBall.getPosition().x + FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR
+                || fieldGrid[((int)enemyBall.getPosition().x + FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR
+                || fieldGrid[((int)enemyBall.getPosition().x - FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR
+                || fieldGrid[((int)enemyBall.getPosition().x - FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == RED_TERRITORY_COLOR
+                || fieldGrid[((int)enemyBall.getPosition().x - FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - 15) / FIELD_CELL_SIZE] == BLUE_TERRITORY_COLOR){
             enemyBall.setNewDirectionVertical();
         }
 
@@ -638,9 +606,9 @@ public class GameWindow implements Screen {
 
         if(fieldGrid[x][y] == 0) {
             if (isRed)
-                fieldGrid[x][y] = 17;
+                fieldGrid[x][y] = RED_TEMP_COLOR;
             else
-                fieldGrid[x][y] = 7;
+                fieldGrid[x][y] = BLUE_TEMP_COLOR;
         }
         if(fieldGrid[x- 1][y] == 0)
             fieldFillIteration(x - 1, y, depth + 1, isRed);
@@ -675,20 +643,6 @@ public class GameWindow implements Screen {
 
         if(points.size() != 0)
             points.remove(0);
-
-//        for(int i = 0; i < 980 / FIELD_CELL_SIZE; i++){
-//            for(int j = 0; j < 690 / FIELD_CELL_SIZE; j++) {
-//                if(fieldGrid[i][j] == 0)
-//                    if(isRed)
-//                        fieldGrid[i][j] = 12;
-//                    else
-//                        fieldGrid[i][j] = 2;
-//                if(fieldGrid[i][j] == 17 && isRed)
-//                    fieldGrid[i][j] = 0;
-//                if(fieldGrid[i][j] == 7 && !isRed)
-//                    fieldGrid[i][j] = 0;
-//            }
-//        }
     }
 }
 
