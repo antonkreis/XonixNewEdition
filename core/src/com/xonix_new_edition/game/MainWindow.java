@@ -22,7 +22,7 @@ public class MainWindow implements Screen {
     private Button helpButton;
     private SpriteBatch batch;
     private Texture background;
-    private OrthographicCamera camera;
+    //private OrthographicCamera camera;
     private BitmapFont nicknameTextFont;
     private String mainWindowNicknameBlue;
     private String mainWindowNicknameRed;
@@ -79,7 +79,7 @@ public class MainWindow implements Screen {
                                 input = input.substring(0, 12);
                             nicknameLengthRed = input.length();
                             mainWindowNicknameRed = input;
-                            System.out.println(input);
+                            //System.out.println(input);
                         }
                     }
 
@@ -127,8 +127,8 @@ public class MainWindow implements Screen {
         //Gdx.input.setInputProcessor(nicknameButton);
 
         background = new Texture("background_new.png");
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, 1280, 720);
+        //camera = new OrthographicCamera();
+        //camera.setToOrtho(false, 1280, 720);
     }
 
     @Override
@@ -138,8 +138,8 @@ public class MainWindow implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        //Gdx.gl.glClearColor(1, 1, 1, 1);
+        //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         //batch.draw(img, 0, 0);
         batch.draw(background, 0, 0);

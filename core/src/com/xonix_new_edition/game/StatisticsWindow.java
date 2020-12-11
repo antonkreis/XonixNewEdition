@@ -18,7 +18,7 @@ public class StatisticsWindow implements Screen {
     private SpriteBatch batch;
     private Texture background;
     private Button backButton;
-    private OrthographicCamera camera;
+    //private OrthographicCamera camera;
     private BitmapFont textFont;
     private String timeout;
     private String winnerCapturedAreaPercent;
@@ -66,8 +66,8 @@ public class StatisticsWindow implements Screen {
 
         textFont = new BitmapFont(Gdx.files.internal("font2.fnt"));
 
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, 1280, 720);
+        //camera = new OrthographicCamera();
+        //camera.setToOrtho(false, 1280, 720);
 
         winnerLabel = "The winner:";
         place2Label = "The second place:";
@@ -82,8 +82,8 @@ public class StatisticsWindow implements Screen {
 
     @Override
     public void render(float v) {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+//        Gdx.gl.glClearColor(1, 1, 1, 1);
+//        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
         batch.draw(background, 0, 0);

@@ -13,17 +13,17 @@ public class Button{
     private Texture buttonImageUp;
     private Texture buttonImageDown;
     public TextButton textButton;
-    private XonixNewEdition xonixNewEdition;
+    //private XonixNewEdition xonixNewEdition;
     private Vector2 position;
 
     public Button(final XonixNewEdition xonixNewEdition, String fileNameUp, String fileNameDown, int x, int y){
-        this.xonixNewEdition = xonixNewEdition;
+        //this.xonixNewEdition = xonixNewEdition;
         buttonImageUp = new Texture(fileNameUp);
         buttonImageDown = new Texture(fileNameDown);
 
         BitmapFont bitmapFont = new BitmapFont();
-        bitmapFont.getData().setScale(2);
-        bitmapFont.setColor(Color.BLACK);
+        //bitmapFont.getData().setScale(2);
+        //bitmapFont.setColor(Color.BLACK);
         Skin skin = new Skin();
 
         skin.add(fileNameUp.substring(0, fileNameUp.length()-4), buttonImageUp);
@@ -32,9 +32,9 @@ public class Button{
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.up = skin.getDrawable(fileNameUp.substring(0, fileNameUp.length()-4));
         textButtonStyle.down = skin.getDrawable(fileNameDown.substring(0, fileNameDown.length()-4));
-        textButtonStyle.checked = skin.getDrawable(fileNameUp.substring(0, fileNameUp.length()-4));
+        //textButtonStyle.checked = skin.getDrawable(fileNameUp.substring(0, fileNameUp.length()-4));
         textButtonStyle.font = bitmapFont;
-        textButtonStyle.fontColor = Color.BLACK;
+        //textButtonStyle.fontColor = Color.BLACK;
 
         position = new Vector2(x, y);
         textButton = new TextButton("", textButtonStyle);

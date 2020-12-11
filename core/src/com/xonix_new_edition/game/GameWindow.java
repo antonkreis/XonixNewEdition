@@ -33,7 +33,7 @@ public class GameWindow implements Screen {
     private Button leaveButton;
     private SpriteBatch batch;
     private Texture background;
-    private OrthographicCamera camera;
+    //private OrthographicCamera camera;
     private BlueBall blueBall;
     private RedBall redBall;
     private EnemyBall enemyBall;
@@ -81,8 +81,8 @@ public class GameWindow implements Screen {
 
         batch = new SpriteBatch();
         background = new Texture("background_game_window_old.png");
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, 1280, 720);
+        //camera = new OrthographicCamera();
+        //camera.setToOrtho(false, 1280, 720);
         blueBall = new BlueBall(5);
         redBall = new RedBall(5);
         enemyBall = new EnemyBall(5);
@@ -155,8 +155,8 @@ public class GameWindow implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+//        Gdx.gl.glClearColor(1, 1, 1, 1);
+//        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         //fieldGrid[((int)redBall.getPosition().x + 15) / 5][(659 - (int)redBall.getPosition().y + 15) / 5] = 2;
 

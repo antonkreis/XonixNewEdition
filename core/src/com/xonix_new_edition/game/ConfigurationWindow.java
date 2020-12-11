@@ -23,7 +23,7 @@ public class ConfigurationWindow implements Screen {
     private Button minusButton2;
     private SpriteBatch batch;
     private Texture background;
-    private OrthographicCamera camera;
+    //private OrthographicCamera camera;
     private BitmapFont textFont;
     private String timeout;
     private String areaToWin;
@@ -119,8 +119,8 @@ public class ConfigurationWindow implements Screen {
         areaToWin = "20 %";
         textFont = new BitmapFont(Gdx.files.internal("font2.fnt"));
 
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, 1280, 720);
+        //camera = new OrthographicCamera();
+        //camera.setToOrtho(false, 1280, 720);
     }
 
 
@@ -131,8 +131,8 @@ public class ConfigurationWindow implements Screen {
 
     @Override
     public void render(float v) {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+//        Gdx.gl.glClearColor(1, 1, 1, 1);
+//        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
         batch.draw(background, 0, 0);

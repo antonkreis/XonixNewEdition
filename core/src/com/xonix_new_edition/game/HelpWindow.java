@@ -18,7 +18,7 @@ public class HelpWindow implements Screen {
     private SpriteBatch batch;
     private Texture background;
     private Button backButton;
-    private OrthographicCamera camera;
+    //private OrthographicCamera camera;
 
     HelpWindow(final XonixNewEdition xonixNewEdition, final String nicknameBlue, final String nicknameRed){
         this.xonixNewEdition = xonixNewEdition;
@@ -39,8 +39,8 @@ public class HelpWindow implements Screen {
         });
         stage.addActor(backButton.textButton);
 
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, 1280, 720);
+        //camera = new OrthographicCamera();
+        //camera.setToOrtho(false, 1280, 720);
     }
 
     @Override
@@ -50,8 +50,8 @@ public class HelpWindow implements Screen {
 
     @Override
     public void render(float v) {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+//        Gdx.gl.glClearColor(1, 1, 1, 1);
+//        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
         batch.draw(background, 0, 0);
