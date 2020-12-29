@@ -31,6 +31,7 @@ public class GameWindow implements Screen {
     private Stage stage;
     private XonixNewEdition xonixNewEdition;
     private Button leaveButton;
+    private Button pauseButton;
     private SpriteBatch batch;
     private Texture background;
     //private OrthographicCamera camera;
@@ -46,6 +47,8 @@ public class GameWindow implements Screen {
     private boolean redCaptureAborted;
     private boolean blueCaptureAborted;
 
+    private boolean pauseFlag;
+
     private ArrayList<Vector2> points;
 
     private Texture fieldTexture;
@@ -59,6 +62,7 @@ public class GameWindow implements Screen {
     private String time;
     private String nicknameBlue;
     private String nicknameRed;
+    private String pauseLabel;
 
     private String timeout;
     private int timeoutInt;
@@ -87,15 +91,28 @@ public class GameWindow implements Screen {
         redBall = new RedBall(5);
         enemyBall = new EnemyBall(5);
         enemyBall.setRandomDirection();
+
         leaveButton = new Button(xonixNewEdition, "leave_button.png", "leave_button.png", 1070, 20);
         leaveButton.textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("leaveButton");
                 xonixNewEdition.setScreen(new MainWindow(xonixNewEdition, nicknameBlue, nicknameRed));
             }
         });
         stage.addActor(leaveButton.textButton);
+
+        pauseButton = new Button(xonixNewEdition, "pause_button.png", "pause_button.png", 1070, 180);
+        pauseButton.textButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if(!pauseFlag)
+                    pauseFlag = true;
+                else
+                    pauseFlag = false;
+                //xonixNewEdition.setScreen(new MainWindow(xonixNewEdition, nicknameBlue, nicknameRed));
+            }
+        });
+        stage.addActor(pauseButton.textButton);
 
         Gdx.gl.glLineWidth(5);
         shapeRenderer = new ShapeRenderer();
@@ -145,6 +162,8 @@ public class GameWindow implements Screen {
         minutes = Integer.parseInt(timeout.substring(0, 1));
         seconds = 0;
 
+        pauseLabel = "PAUSE!";
+
         textFont = new BitmapFont(Gdx.files.internal("font2.fnt"));
     }
 
@@ -160,58 +179,63 @@ public class GameWindow implements Screen {
 
         //fieldGrid[((int)redBall.getPosition().x + 15) / 5][(659 - (int)redBall.getPosition().y + 15) / 5] = 2;
 
-        for(int i = 0; i < FIELD_SIZE_X / FIELD_CELL_SIZE; i++){
-            for(int j = 0; j < FIELD_SIZE_Y / FIELD_CELL_SIZE; j++){
-                if(fieldGrid[i][j] == BLUE_TRACK_COLOR){
-                    fieldPixmap.setColor(Color.BLUE);
-                    fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
-                            FIELD_CELL_SIZE, FIELD_CELL_SIZE);
-                }
-                else if(fieldGrid[i][j] == LIGHT_GRAY_COLOR){
-                    fieldPixmap.setColor(Color.LIGHT_GRAY);
-                    fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
-                            FIELD_CELL_SIZE, FIELD_CELL_SIZE);
-                }
-                else if(fieldGrid[i][j] == BLUE_TERRITORY_COLOR){
-                    fieldPixmap.setColor(Color.BLUE);
-                    fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
-                            FIELD_CELL_SIZE, FIELD_CELL_SIZE);
-                }
-                else if(fieldGrid[i][j] == 30){
-                    fieldPixmap.setColor(Color.YELLOW);
-                    fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
-                            FIELD_CELL_SIZE, FIELD_CELL_SIZE);
-                }
-                else if(fieldGrid[i][j] == RED_TRACK_COLOR){
-                    fieldPixmap.setColor(Color.RED);
-                    fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
-                            FIELD_CELL_SIZE, FIELD_CELL_SIZE);
-                }
-                else if(fieldGrid[i][j] == RED_TERRITORY_COLOR){
-                    fieldPixmap.setColor(Color.RED);
-                    fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
-                            FIELD_CELL_SIZE, FIELD_CELL_SIZE);
-                }
-                else{
-                    fieldPixmap.setColor(Color.WHITE);
-                    fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
-                            FIELD_CELL_SIZE, FIELD_CELL_SIZE);
+        if(!pauseFlag)
+            for(int i = 0; i < FIELD_SIZE_X / FIELD_CELL_SIZE; i++){
+                for(int j = 0; j < FIELD_SIZE_Y / FIELD_CELL_SIZE; j++){
+                    if(fieldGrid[i][j] == BLUE_TRACK_COLOR){
+                        fieldPixmap.setColor(Color.BLUE);
+                        fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
+                                FIELD_CELL_SIZE, FIELD_CELL_SIZE);
+                    }
+                    else if(fieldGrid[i][j] == LIGHT_GRAY_COLOR){
+                        fieldPixmap.setColor(Color.LIGHT_GRAY);
+                        fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
+                                FIELD_CELL_SIZE, FIELD_CELL_SIZE);
+                    }
+                    else if(fieldGrid[i][j] == BLUE_TERRITORY_COLOR){
+                        fieldPixmap.setColor(Color.BLUE);
+                        fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
+                                FIELD_CELL_SIZE, FIELD_CELL_SIZE);
+                    }
+                    else if(fieldGrid[i][j] == 30){
+                        fieldPixmap.setColor(Color.YELLOW);
+                        fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
+                                FIELD_CELL_SIZE, FIELD_CELL_SIZE);
+                    }
+                    else if(fieldGrid[i][j] == RED_TRACK_COLOR){
+                        fieldPixmap.setColor(Color.RED);
+                        fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
+                                FIELD_CELL_SIZE, FIELD_CELL_SIZE);
+                    }
+                    else if(fieldGrid[i][j] == RED_TERRITORY_COLOR){
+                        fieldPixmap.setColor(Color.RED);
+                        fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
+                                FIELD_CELL_SIZE, FIELD_CELL_SIZE);
+                    }
+                    else{
+                        fieldPixmap.setColor(Color.WHITE);
+                        fieldPixmap.fillRectangle(FIELD_OFFSET + i * FIELD_CELL_SIZE, FIELD_OFFSET + j * FIELD_CELL_SIZE,
+                                FIELD_CELL_SIZE, FIELD_CELL_SIZE);
+                    }
                 }
             }
-        }
 
         fieldTexture.draw(fieldPixmap, 0, 0);
 
         //currentDirection = blueBall.getDirection();
-        blueBall.update();
-        redBall.update();
-        enemyBall.update();
+        if(!pauseFlag){
+            blueBall.update();
+            redBall.update();
+            enemyBall.update();
+        }
 
         batch.begin();
         batch.draw(background, 0, 0);
         batch.draw(fieldTexture, 0, 0);
         textFont.setColor(Color.BLACK);
         textFont.draw(batch, scoreLabel, 1020, 700);
+        if(pauseFlag)
+            textFont.draw(batch, pauseLabel, 500, 500);
         textFont.setColor(Color.BLUE);
         textFont.draw(batch, nicknameBlue + ":", 1020, 650);
         textFont.draw(batch, blueBallScore, 1090, 600);
@@ -229,9 +253,12 @@ public class GameWindow implements Screen {
         enemyBall.render(batch);
         batch.end();
         stage.draw();
-        update();
 
-        rawTimeSinceStart += Gdx.graphics.getRawDeltaTime(); //Info about time counting: https://stackoverrun.com/ru/q/11987174
+        if(!pauseFlag)
+            update();
+
+        if(!pauseFlag)
+            rawTimeSinceStart += Gdx.graphics.getRawDeltaTime(); //Info about time counting: https://stackoverrun.com/ru/q/11987174
 
         if(rawTimeSinceStart >= 1){
             rawTimeSinceStart--;
@@ -468,8 +495,8 @@ public class GameWindow implements Screen {
 
         if(minutes == 0 && seconds == 0)
             xonixNewEdition.setScreen(new StatisticsWindow(xonixNewEdition,
-                    redCapturedAreaPercent.toString().substring(0,
-                            redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", redCapturedAreaPercent.toString().substring(0,
+                    blueCapturedAreaPercent.toString().substring(0,
+                            blueCapturedAreaPercent.toString().indexOf(".") + 2) + " %", redCapturedAreaPercent.toString().substring(0,
                     redCapturedAreaPercent.toString().indexOf(".") + 2) + " %", minutes + ":" + seconds, nicknameBlue, nicknameRed, true));
 
         if((fieldGrid[((int)enemyBall.getPosition().x + FIELD_CELL_SIZE + FIELD_OFFSET) / FIELD_CELL_SIZE][(689 - (int)enemyBall.getPosition().y - FIELD_OFFSET) / FIELD_CELL_SIZE] == LIGHT_GRAY_COLOR
